@@ -12,7 +12,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--disp);min-height:1
 body.tamil{font-family:var(--tamil)}
 body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(34,197,94,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(34,197,94,.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
 .wrap{position:relative;z-index:1;max-width:1400px;margin:0 auto;padding:24px}
-
 header{display:flex;align-items:center;justify-content:space-between;padding:20px 28px;background:var(--surface);border:1px solid var(--border);border-radius:16px;margin-bottom:24px;flex-wrap:wrap;gap:12px}
 .logo{display:flex;align-items:center;gap:12px}
 .logo-icon{width:42px;height:42px;background:linear-gradient(135deg,var(--green),var(--teal));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
@@ -26,8 +25,6 @@ header{display:flex;align-items:center;justify-content:space-between;padding:20p
 .lang-tog{display:flex;background:var(--surface2);border:1px solid var(--border);border-radius:8px;overflow:hidden}
 .lang-btn{padding:6px 16px;border:none;background:transparent;color:var(--muted);font-size:.78rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit}
 .lang-btn.active{background:var(--teal);color:#000}
-
-/* BUZZER */
 .buz-panel{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:22px 28px;margin-bottom:24px;display:flex;align-items:center;gap:28px;flex-wrap:wrap}
 .buz-vis{position:relative;flex-shrink:0;width:90px;height:90px;display:flex;align-items:center;justify-content:center}
 .buz-body{width:62px;height:62px;border-radius:50%;background:radial-gradient(circle at 36% 32%,#ff8080,#c0392b 55%,#7a1010);border:3px solid #8b1a1a;box-shadow:0 4px 20px rgba(239,68,68,.25),inset 0 -5px 10px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;font-size:26px;position:relative;z-index:2;transition:all .1s}
@@ -67,21 +64,15 @@ input[type=range].vsl::-webkit-slider-thumb{-webkit-appearance:none;width:16px;h
 .buz-meta{text-align:center;min-width:110px}
 .buz-meta-lbl{font-size:.65rem;font-family:var(--mono);color:var(--muted);margin-bottom:6px}
 .buz-count{font-size:2.2rem;font-weight:800;color:var(--red)}
-
-/* TOP BAR */
 .top-bar{display:flex;gap:10px;margin-bottom:24px;align-items:center;flex-wrap:wrap}
 .mode-btn{padding:8px 20px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:var(--disp);font-weight:600;font-size:.85rem;cursor:pointer;transition:all .2s}
 .mode-btn.active{background:var(--surface2);border-color:var(--green);color:var(--green)}
 .mode-btn:hover:not(.active){border-color:var(--muted);color:var(--text)}
-
-/* STATUS */
 .status-banner{padding:14px 22px;border-radius:12px;margin-bottom:24px;display:flex;align-items:center;gap:12px;font-weight:600;font-size:.9rem;transition:all .4s}
 .sb-ok{background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.25);color:var(--green)}
 .sb-warn{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);color:var(--amber)}
 .sb-alert{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.35);color:var(--red);animation:fbanner .8s ease infinite}
 @keyframes fbanner{0%,100%{opacity:1}50%{opacity:.65}}
-
-/* CARDS */
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:18px;margin-bottom:24px}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;position:relative;overflow:hidden;transition:border-color .3s,transform .2s}
 .card:hover{transform:translateY(-2px)}
@@ -104,8 +95,9 @@ input[type=range].vsl::-webkit-slider-thumb{-webkit-appearance:none;width:16px;h
 .spark-wrap{margin-top:14px}
 .spark-lbl{font-size:.62rem;font-family:var(--mono);color:var(--muted);margin-bottom:4px}
 canvas.spark{width:100%;height:48px;display:block}
-
-/* SPECIES */
+.twin-panel{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;margin-top:24px;}
+.twin-title{font-weight:800;margin-bottom:18px;font-size:1rem;}
+.heat-title{font-size:.7rem;font-family:var(--mono);color:var(--muted);}
 .sp-panel{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:0}
 .sp-card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px}
 .sp-name{font-weight:700;font-size:.9rem;margin-bottom:3px}
@@ -114,8 +106,6 @@ canvas.spark{width:100%;height:48px;display:block}
 .sp-row:last-child{border:none}
 .sp-param{font-size:.72rem;color:var(--muted)}
 .sp-range{font-size:.72rem;font-family:var(--mono);color:var(--green)}
-
-/* REF */
 .ref-sec{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:24px}
 .ref-title{font-weight:800;font-size:1rem;margin-bottom:16px}
 table{width:100%;border-collapse:collapse;font-size:.8rem}
@@ -125,8 +115,6 @@ tr:last-child td{border:none}
 .td-ok{color:var(--green);font-family:var(--mono)}
 .td-red{color:var(--red);font-family:var(--mono);font-size:.75rem}
 .td-src{font-size:.65rem;color:var(--muted)}
-
-/* LOG */
 .log-sec{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px}
 .log-title{font-weight:800;font-size:1rem;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
 .log-clr{font-size:.7rem;font-family:var(--mono);color:var(--muted);cursor:pointer}
@@ -140,14 +128,10 @@ tr:last-child td{border:none}
 </head>
 <body>
 <div class="wrap">
-
 <header>
   <div class="logo">
     <div class="logo-icon">🌿</div>
-    <div class="logo-text">
-      <h1 id="appTitle">AgroSense</h1>
-      <span id="appSub">Livestock &amp; Fisheries IoT Monitor</span>
-    </div>
+    <div class="logo-text"><h1 id="appTitle">AgroSense</h1><span id="appSub">Livestock &amp; Fisheries IoT Monitor</span></div>
   </div>
   <div class="hdr-r">
     <div class="lang-tog">
@@ -161,136 +145,288 @@ tr:last-child td{border:none}
 
 <!-- BUZZER PANEL -->
 <div class="buz-panel">
-  <div class="buz-vis" id="buzVis">
-    <div class="buz-ring r1"></div>
-    <div class="buz-ring r2"></div>
-    <div class="buz-body">🔔</div>
-  </div>
+  <div class="buz-vis" id="buzVis"><div class="buz-ring r1"></div><div class="buz-ring r2"></div><div class="buz-body">🔔</div></div>
   <div class="buz-ctrl">
     <div class="buz-title" id="buzTitle">Buzzer Simulation</div>
     <div class="buz-sub" id="buzSub">Hardware alert simulation — replaces physical buzzer on ESP32</div>
     <div class="buz-state bs-off" id="buzState">■ OFF</div>
-    <div class="vol-row">
-      <span class="vol-lbl" id="volLbl">Volume</span>
-      <input type="range" class="vsl" id="volSlider" min="0" max="1" step="0.05" value="0.6" oninput="document.getElementById('volVal').textContent=Math.round(this.value*100)+'%'"/>
-      <span class="vol-val" id="volVal">60%</span>
-    </div>
-    <div class="freq-row">
-      <span class="freq-lbl" id="freqLbl">Tone:</span>
-      <button class="freq-btn act" id="f1" onclick="setFreq(880,'short')">Short Beep</button>
-      <button class="freq-btn" id="f2" onclick="setFreq(1200,'long')">Long Tone</button>
-      <button class="freq-btn" id="f3" onclick="setFreq(600,'pulse')">Pulse</button>
-      <button class="freq-btn" id="f4" onclick="setFreq(1500,'siren')">Siren</button>
-    </div>
-    <div class="buz-btns">
-      <button class="bb bb-trig" id="btnTrig" onclick="triggerBuzzer()">🚨 Trigger Alert</button>
-      <button class="bb bb-stop" id="btnStop" onclick="stopBuzzer()">■ Stop</button>
-      <button class="bb bb-test" id="btnTest" onclick="testBuzzer()">▶ Test Beep</button>
-    </div>
+    <div class="vol-row"><span class="vol-lbl" id="volLbl">Volume</span><input type="range" class="vsl" id="volSlider" min="0" max="1" step="0.05" value="0.6" oninput="document.getElementById('volVal').textContent=Math.round(this.value*100)+'%'"/><span class="vol-val" id="volVal">60%</span></div>
+    <div class="freq-row"><span class="freq-lbl" id="freqLbl">Tone:</span><button class="freq-btn act" id="f1" onclick="setFreq(880,'short')">Short Beep</button><button class="freq-btn" id="f2" onclick="setFreq(1200,'long')">Long Tone</button><button class="freq-btn" id="f3" onclick="setFreq(600,'pulse')">Pulse</button><button class="freq-btn" id="f4" onclick="setFreq(1500,'siren')">Siren</button></div>
+    <div class="buz-btns"><button class="bb bb-trig" id="btnTrig" onclick="triggerBuzzer()">🚨 Trigger Alert</button><button class="bb bb-stop" id="btnStop" onclick="stopBuzzer()">■ Stop</button><button class="bb bb-test" id="btnTest" onclick="testBuzzer()">▶ Test Beep</button></div>
   </div>
   <div class="buz-meta">
     <div class="buz-meta-lbl" id="autoLbl">AUTO-TRIGGER</div>
-    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;justify-content:center;margin-bottom:4px">
-      <input type="checkbox" id="autoChk" checked style="width:16px;height:16px;accent-color:var(--red)"/>
-      <span style="font-size:.78rem" id="autoTxt">On alert</span>
-    </label>
+    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;justify-content:center;margin-bottom:4px"><input type="checkbox" id="autoChk" checked style="width:16px;height:16px;accent-color:var(--red)"/><span style="font-size:.78rem" id="autoTxt">On alert</span></label>
     <div class="buz-meta-lbl" id="buzCntLbl" style="margin-top:12px">TRIGGERS</div>
     <div class="buz-count" id="buzCnt">0</div>
   </div>
 </div>
 
-<!-- MODE BAR -->
 <div class="top-bar">
   <button class="mode-btn active" id="btnLS" onclick="setMode('livestock')">🐄 <span id="mLS">Livestock</span></button>
   <button class="mode-btn" id="btnFS" onclick="setMode('fisheries')">🐟 <span id="mFS">Fisheries</span></button>
 </div>
+<div class="status-banner sb-ok" id="banner"><span>●</span><span id="bannerTxt">All parameters within safe range — System Normal</span></div>
 
-<!-- STATUS -->
-<div class="status-banner sb-ok" id="banner">
-  <span>●</span><span id="bannerTxt">All parameters within safe range — System Normal</span>
-</div>
-
-<!-- CARDS -->
+<!-- SENSOR CARDS -->
 <div class="cards">
-  <!-- Temp -->
   <div class="card" id="card-temp" style="--cc:#22c55e">
     <div class="card-hdr"><div><div class="card-lbl" id="lTemp">Temperature</div></div><div class="card-ico">🌡️</div></div>
     <div class="card-val" id="val-temp">30.5 <span class="card-unit">°C</span></div>
     <div class="card-st st-ok" id="st-temp">● Normal</div>
-    <div class="range-sec">
-      <div class="range-lbl"><span id="rMin">Min</span><span id="lSafe">Safe Range</span><span id="rMax">Max</span></div>
-      <div class="range-trk" id="trk-temp"><div class="range-safe" id="safe-temp"></div><div class="range-ndl" id="ndl-temp"></div></div>
-      <div class="range-lim"><span id="mn-temp">0°C</span><span id="mx-temp">50°C</span></div>
-    </div>
+    <div class="range-sec"><div class="range-lbl"><span id="rMin">Min</span><span id="lSafe">Safe Range</span><span id="rMax">Max</span></div><div class="range-trk"><div class="range-safe" id="safe-temp"></div><div class="range-ndl" id="ndl-temp"></div></div><div class="range-lim"><span id="mn-temp">0°C</span><span id="mx-temp">50°C</span></div></div>
     <div class="spark-wrap"><div class="spark-lbl" id="lHist">History (last 20 readings)</div><canvas class="spark" id="sp-temp" width="300" height="48"></canvas></div>
   </div>
-  <!-- Hum -->
   <div class="card" id="card-hum" style="--cc:#3b82f6">
     <div class="card-hdr"><div><div class="card-lbl" id="lHum">Humidity</div></div><div class="card-ico">💧</div></div>
     <div class="card-val" id="val-hum">52.0 <span class="card-unit">%</span></div>
     <div class="card-st st-ok" id="st-hum">● Normal</div>
-    <div class="range-sec">
-      <div class="range-lbl"><span>Min</span><span id="lSafe2">Safe Range</span><span>Max</span></div>
-      <div class="range-trk" id="trk-hum"><div class="range-safe" id="safe-hum"></div><div class="range-ndl" id="ndl-hum" style="background:var(--blue);box-shadow:0 0 0 2px var(--blue)"></div></div>
-      <div class="range-lim"><span id="mn-hum">0%</span><span id="mx-hum">100%</span></div>
-    </div>
+    <div class="range-sec"><div class="range-lbl"><span>Min</span><span id="lSafe2">Safe Range</span><span>Max</span></div><div class="range-trk"><div class="range-safe" id="safe-hum"></div><div class="range-ndl" id="ndl-hum" style="background:var(--blue);box-shadow:0 0 0 2px var(--blue)"></div></div><div class="range-lim"><span id="mn-hum">0%</span><span id="mx-hum">100%</span></div></div>
     <div class="spark-wrap"><div class="spark-lbl" id="lHist2">History (last 20 readings)</div><canvas class="spark" id="sp-hum" width="300" height="48"></canvas></div>
   </div>
-  <!-- Gas -->
   <div class="card" id="card-gas" style="--cc:#f59e0b">
     <div class="card-hdr"><div><div class="card-lbl" id="lGas">Gas / Air Quality (MQ-135)</div></div><div class="card-ico">💨</div></div>
     <div class="card-val" id="val-gas">48 <span class="card-unit">ADC</span></div>
     <div class="card-st st-ok" id="st-gas">● Normal</div>
-    <div class="range-sec">
-      <div class="range-lbl"><span>Min</span><span id="lZone">Safe Zone</span><span id="lAlrt">Alert</span></div>
-      <div class="range-trk" id="trk-gas"><div class="range-safe" id="safe-gas"></div><div class="range-ndl" id="ndl-gas" style="background:var(--amber);box-shadow:0 0 0 2px var(--amber)"></div></div>
-      <div class="range-lim"><span>0</span><span id="mx-gas">4095</span></div>
-    </div>
+    <div class="range-sec"><div class="range-lbl"><span>Min</span><span id="lZone">Safe Zone</span><span id="lAlrt">Alert</span></div><div class="range-trk"><div class="range-safe" id="safe-gas"></div><div class="range-ndl" id="ndl-gas" style="background:var(--amber);box-shadow:0 0 0 2px var(--amber)"></div></div><div class="range-lim"><span>0</span><span id="mx-gas">4095</span></div></div>
     <div class="spark-wrap"><div class="spark-lbl" id="lHist3">History (last 20 readings)</div><canvas class="spark" id="sp-gas" width="300" height="48"></canvas></div>
   </div>
-  <!-- Sound -->
   <div class="card" id="card-snd" style="--cc:#a855f7">
     <div class="card-hdr"><div><div class="card-lbl" id="lSnd">Sound Detection (Digital)</div></div><div class="card-ico">🔊</div></div>
     <div class="card-val" id="val-snd" style="font-size:2rem;padding-top:6px">HIGH</div>
     <div class="card-st st-warn" id="st-snd">⚠ Sound Detected</div>
-    <div style="margin-top:14px;font-size:.72rem;color:var(--muted);font-family:var(--mono);line-height:1.9" id="sndInfo">
-      Digital: <span style="color:var(--text)">0 = Silent</span> / <span style="color:var(--red)">1 = Sound Event</span><br>
-      Threshold: <span style="color:var(--text)">≥85 dB indicates stress</span><br>
-      Session alerts: <span id="sndCnt" style="color:var(--amber)">0</span>
-    </div>
+    <div style="margin-top:14px;font-size:.72rem;color:var(--muted);font-family:var(--mono);line-height:1.9" id="sndInfo">Digital: <span style="color:var(--text)">0 = Silent</span> / <span style="color:var(--red)">1 = Sound Event</span><br>Threshold: <span style="color:var(--text)">≥85 dB indicates stress</span><br>Session alerts: <span id="sndCnt" style="color:var(--amber)">0</span></div>
   </div>
 </div>
 
-<!-- SPECIES -->
+<!-- DIGITAL TWIN PANEL -->
+<div class="twin-panel">
+  <div class="twin-title" id="twinTitle">🧠 Digital Twin — Virtual Barn Model</div>
+
+  <!-- ROW 1: Floor plan -->
+  <div style="margin-bottom:16px;">
+    <div class="heat-title" id="floorTitle" style="margin-bottom:8px;">📐 Barn Floor Plan — Live View</div>
+    <canvas id="floorplanCanvas" width="900" height="220" style="width:100%;display:block;border-radius:10px;border:1px solid #1f3328;"></canvas>
+  </div>
+
+  <!-- ROW 2: Heatmap -->
+  <div class="twin-heat" style="margin-bottom:16px;">
+    <div class="heat-title" id="heatTitle">🌡️ Barn Heat Density Map</div>
+    <canvas id="heatmapCanvas" width="800" height="160" style="width:100%;height:160px;display:block;border-radius:10px;border:1px solid #1f3328;"></canvas>
+    <canvas id="heatmapOverlay" width="800" height="160" style="width:100%;height:160px;display:block;border-radius:10px;margin-top:-160px;pointer-events:none;"></canvas>
+  </div>
+
+  <!-- ROW 3: Stress history + Fusion score -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:14px;">
+      <div class="heat-title" id="stressHistTitle" style="margin-bottom:8px;">📈 Stress Score History</div>
+      <canvas id="stressHistCanvas" width="400" height="80" style="width:100%;display:block;"></canvas>
+      <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:.62rem;font-family:var(--mono);color:var(--muted);">
+        <span id="stressOld">20 readings ago</span><span id="stressNow">now</span>
+      </div>
+    </div>
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:14px;">
+      <div class="heat-title" id="fusionTitle" style="margin-bottom:10px;">🔬 Multi-Sensor Fusion Score</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;" id="fusionGrid">
+        <div style="text-align:center;">
+          <div id="fusLblTemp" style="font-size:.6rem;font-family:var(--mono);color:var(--muted);margin-bottom:4px;">TEMP</div>
+          <canvas id="fusionTemp" width="80" height="80" style="width:80px;height:80px;display:block;margin:0 auto;"></canvas>
+          <div style="font-size:.65rem;font-family:var(--mono);color:var(--muted);margin-top:3px;" id="fusionTempVal">--</div>
+        </div>
+        <div style="text-align:center;">
+          <div id="fusLblGas" style="font-size:.6rem;font-family:var(--mono);color:var(--muted);margin-bottom:4px;">GAS</div>
+          <canvas id="fusionGas" width="80" height="80" style="width:80px;height:80px;display:block;margin:0 auto;"></canvas>
+          <div style="font-size:.65rem;font-family:var(--mono);color:var(--muted);margin-top:3px;" id="fusionGasVal">--</div>
+        </div>
+        <div style="text-align:center;">
+          <div id="fusLblHum" style="font-size:.6rem;font-family:var(--mono);color:var(--muted);margin-bottom:4px;">HUMIDITY</div>
+          <canvas id="fusionHum" width="80" height="80" style="width:80px;height:80px;display:block;margin:0 auto;"></canvas>
+          <div style="font-size:.65rem;font-family:var(--mono);color:var(--muted);margin-top:3px;" id="fusionHumVal">--</div>
+        </div>
+        <div style="text-align:center;">
+          <div id="fusLblOverall" style="font-size:.6rem;font-family:var(--mono);color:var(--muted);margin-bottom:4px;">OVERALL</div>
+          <canvas id="fusionOverall" width="80" height="80" style="width:80px;height:80px;display:block;margin:0 auto;"></canvas>
+          <div style="font-size:.65rem;font-family:var(--mono);color:var(--muted);margin-top:3px;" id="fusionOverallVal">--</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 4: ML Prediction + Bidirectional Controls + Recommendations -->
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+
+    <!-- ML PREDICTION -->
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:14px;">
+      <div class="heat-title" id="mlTitle" style="margin-bottom:10px;">🤖 ML Prediction (Linear Regression)</div>
+      <div style="font-size:.75rem;font-family:var(--mono);color:var(--text);line-height:2;">
+        <div><span id="mlTempLbl">Temp in 1h:</span> <span id="predTemp" style="color:var(--amber);font-weight:700;">--</span></div>
+        <div><span id="mlTrendLbl">Trend:</span> <span id="predTrend" style="color:var(--muted);">--</span></div>
+        <div><span id="mlStressLbl">Stress Risk:</span> <span id="predStress" style="color:var(--green);font-weight:700;">SAFE</span></div>
+        <div><span id="mlConfLbl">Confidence:</span> <span id="predConf" style="color:var(--teal);">--</span></div>
+      </div>
+    </div>
+
+    <!-- BIDIRECTIONAL CONTROLS -->
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:14px;">
+      <div class="heat-title" id="ctrlTitle" style="margin-bottom:10px;">🎛️ Barn Controls (Bidirectional)</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span id="ctrlFanLbl" style="font-size:.72rem;font-family:var(--mono);color:var(--muted);">🌀 Fan</span>
+          <button id="btnFan" onclick="toggleControl('fan')" style="padding:4px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:.7rem;font-family:var(--mono);cursor:pointer;">OFF</button>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span id="ctrlDoorLbl" style="font-size:.72rem;font-family:var(--mono);color:var(--muted);">🚪 Barn Door</span>
+          <button id="btnDoor" onclick="toggleControl('door')" style="padding:4px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:.7rem;font-family:var(--mono);cursor:pointer;">CLOSED</button>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span id="ctrlMistLbl" style="font-size:.72rem;font-family:var(--mono);color:var(--muted);">💦 Mister</span>
+          <button id="btnMist" onclick="toggleControl('mist')" style="padding:4px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:.7rem;font-family:var(--mono);cursor:pointer;">OFF</button>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span id="ctrlLightLbl" style="font-size:.72rem;font-family:var(--mono);color:var(--muted);">💡 Light</span>
+          <button id="btnLight" onclick="toggleControl('light')" style="padding:4px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:.7rem;font-family:var(--mono);cursor:pointer;">OFF</button>
+        </div>
+        <div style="font-size:.6rem;font-family:var(--mono);color:var(--muted);margin-top:2px;" id="ctrlStatus">Auto-mode: monitoring</div>
+      </div>
+    </div>
+
+    <!-- RECOMMENDATIONS -->
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:14px;">
+      <div class="heat-title" id="recoTitle" style="margin-bottom:8px;">💡 Smart Recommendations</div>
+      <div id="recoList" style="font-size:.72rem;font-family:var(--mono);color:var(--muted);line-height:2;">
+        <div style="color:var(--green);">✓ All systems normal</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SPECIES TABLE -->
 <div class="ref-sec" id="spSec">
   <div class="ref-title">📋 <span id="spTitle">Species-Specific Safe Parameter Ranges</span> <span style="font-size:.7rem;font-weight:400;color:var(--muted);font-family:var(--mono)" id="modeTag">— LIVESTOCK MODE</span></div>
   <div class="sp-panel" id="spPanel"></div>
 </div>
 
-<!-- REF TABLE -->
+<!-- REFERENCE TABLE -->
 <div class="ref-sec">
   <div class="ref-title" id="refTitle">📚 Scientific Basis — Parameter Thresholds &amp; Sources</div>
-  <table>
-    <thead><tr>
-      <th id="thP">Parameter</th><th id="thM">Current Mode</th>
-      <th id="thS">Safe Range</th><th id="thA">Alert Threshold</th><th id="thSr">Standard / Source</th>
-    </tr></thead>
-    <tbody id="refTbody"></tbody>
-  </table>
+  <table><thead><tr><th id="thP">Parameter</th><th id="thM">Current Mode</th><th id="thS">Safe Range</th><th id="thA">Alert Threshold</th><th id="thSr">Standard / Source</th></tr></thead><tbody id="refTbody"></tbody></table>
 </div>
 
-<!-- LOG -->
+<!-- ALERT LOG -->
 <div class="log-sec">
-  <div class="log-title">
-    <span id="logTitle">🚨 Alert Log</span>
-    <span class="log-clr" id="logClr" onclick="clearLog()">Clear</span>
-  </div>
+  <div class="log-title"><span id="logTitle">🚨 Alert Log</span><span class="log-clr" id="logClr" onclick="clearLog()">Clear</span></div>
   <div id="logCont"><div class="log-empty" id="logEmpty">No alerts — system running normally.</div></div>
 </div>
+</div>
 
-</div><!-- /wrap -->
 <script>
-// ── TRANSLATIONS ──────────────────────────────
+// ══════════════════════════════════════════
+// BARNTWIN CLASS
+// ══════════════════════════════════════════
+class BarnTwin {
+  constructor(){
+    this.state={temperature:0,humidity:0,gas:0,sound:0,stressScore:0,stressLevel:"SAFE"};
+    this._heatCanvas=null;this._overlayCanvas=null;this._zones=null;this._tick=0;
+  }
+  updateSensors(t,h,g,s){this.state.temperature=t;this.state.humidity=h;this.state.gas=g;this.state.sound=s;}
+  calculateStress(){
+    let s=0;
+    if(this.state.temperature>36)s+=40;else if(this.state.temperature>32)s+=20;
+    if(this.state.gas>1500)s+=35;else if(this.state.gas>1000)s+=15;
+    if(this.state.humidity>80||this.state.humidity<40)s+=15;
+    if(this.state.sound===1)s+=10;
+    this.state.stressScore=s;
+    this.state.stressLevel=s<30?"SAFE":s<60?"WARNING":"CRITICAL";
+    return this.state;
+  }
+  predictHeat(h){if(!h||h.length<5)return null;return this.state.temperature+(h[h.length-1]-h[h.length-5]);}
+  initHeatmap(canvasId,overlayId){
+    this._heatCanvas=document.getElementById(canvasId);
+    this._overlayCanvas=document.getElementById(overlayId);
+    this._zones=[
+      {label:'STALL A',fx:0.18,fy:0.45,radius:0.28,baseTemp:0},
+      {label:'STALL B',fx:0.55,fy:0.45,radius:0.28,baseTemp:2},
+      {label:'VENT',   fx:0.88,fy:0.45,radius:0.22,baseTemp:-4}
+    ];
+    this._tick=0;
+    this.renderHeatmap();
+  }
+  renderHeatmap(){
+    const c=this._heatCanvas;if(!c)return;
+    const W=800,H=160;
+    const ctx=c.getContext('2d');
+    this._tick+=0.04;
+    const temp=this.state.temperature,gas=this.state.gas;
+    ctx.clearRect(0,0,W,H);ctx.fillStyle='#050d08';ctx.fillRect(0,0,W,H);
+    this._zones.forEach((z,i)=>{
+      const cx=z.fx*W,cy=z.fy*H+Math.sin(this._tick+i*1.3)*4,r=z.radius*Math.min(W,H);
+      const zT=temp+z.baseTemp,intensity=Math.max(0,Math.min(1,(zT-10)/32));
+      const g2=ctx.createRadialGradient(cx,cy,0,cx,cy,r);
+      g2.addColorStop(0,this._tc(intensity,0.72));
+      g2.addColorStop(0.5,this._tc(intensity*0.6,0.38));
+      g2.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle=g2;ctx.fill();
+    });
+    if(gas>400){
+      const a=Math.min(0.35,(gas-400)/4000);
+      const gg=ctx.createLinearGradient(0,0,W,H);
+      gg.addColorStop(0,`rgba(245,158,11,0)`);gg.addColorStop(0.5,`rgba(245,158,11,${a})`);gg.addColorStop(1,`rgba(239,68,68,${a*0.6})`);
+      ctx.fillStyle=gg;ctx.fillRect(0,0,W,H);
+    }
+    ctx.fillStyle='rgba(0,0,0,0.12)';
+    for(let y=0;y<H;y+=3)ctx.fillRect(0,y,W,1);
+    ctx.strokeStyle='rgba(34,197,94,0.07)';ctx.lineWidth=1;
+    for(let x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+    for(let y=0;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+    this._drawOverlay(W,H);
+  }
+  _drawOverlay(W,H){
+    const oc=this._overlayCanvas;if(!oc)return;
+    const ctx=oc.getContext('2d');ctx.clearRect(0,0,W,H);
+    const temp=this.state.temperature,stress=this.state.stressLevel;
+    const t=T[lang];
+    // Heatmap zone labels use translated stall names
+    const zoneLabels=[t.fpStallA, t.fpStallB, t.fpVent];
+    this._zones.forEach((z,i)=>{
+      const cx=z.fx*W,cy=z.fy*H,zT=(temp+z.baseTemp).toFixed(1);
+      const label=zoneLabels[i]||z.label;
+      ctx.font='bold 10px "Space Mono",monospace';ctx.textAlign='center';
+      const tw=ctx.measureText(label).width+16,py=cy-28;
+      ctx.fillStyle='rgba(10,15,13,0.75)';
+      this._rr(ctx,cx-tw/2,py-11,tw,18,4);ctx.fill();
+      ctx.fillStyle='#5a7a63';ctx.fillText(label,cx,py+2);
+      ctx.font='bold 13px "Space Mono",monospace';
+      const intensity=Math.max(0,Math.min(1,(parseFloat(zT)-10)/32));
+      ctx.fillStyle=this._tcc(intensity);ctx.fillText(zT+'°C',cx,cy+18);
+    });
+    const stressLbl=stress==='SAFE'?t.mlSafe:stress==='WARNING'?t.mlWarning:t.mlCritical;
+    const bc=stress==='SAFE'?'#22c55e':stress==='WARNING'?'#f59e0b':'#ef4444';
+    ctx.font='bold 10px "Space Mono",monospace';ctx.textAlign='right';ctx.fillStyle=bc;
+    ctx.fillText('● '+stressLbl,W-12,18);
+    const bW=120,bH=8,bx=12,by=H-20;
+    const bg=ctx.createLinearGradient(bx,0,bx+bW,0);
+    bg.addColorStop(0,'#14b8a6');bg.addColorStop(0.4,'#22c55e');bg.addColorStop(0.7,'#f59e0b');bg.addColorStop(1,'#ef4444');
+    ctx.fillStyle=bg;this._rr(ctx,bx,by,bW,bH,4);ctx.fill();
+    ctx.font='9px "Space Mono",monospace';ctx.fillStyle='#5a7a63';
+    ctx.textAlign='left';ctx.fillText('10°C',bx,by+bH+11);
+    ctx.textAlign='right';ctx.fillText('42°C',bx+bW,by+bH+11);
+    ctx.textAlign='center';ctx.fillStyle='rgba(90,122,99,0.6)';ctx.fillText(t.heatIndexLbl||'HEAT INDEX',bx+bW/2,by-4);
+  }
+  _tc(t,alpha){
+    let r,g,b;
+    if(t<0.33){const f=t/0.33;r=Math.round(20+f*14);g=Math.round(184+f*13);b=Math.round(166-f*72);}
+    else if(t<0.66){const f=(t-0.33)/0.33;r=Math.round(34+f*211);g=Math.round(197-f*39);b=Math.round(94-f*94);}
+    else{const f=(t-0.66)/0.34;r=Math.round(245-f*6);g=Math.round(158-f*158);b=0;}
+    return `rgba(${r},${g},${b},${alpha})`;
+  }
+  _tcc(t){return t<0.33?'#14b8a6':t<0.66?'#f59e0b':'#ef4444';}
+  _rr(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
+}
+
+// ══════════════════════════════════════════
+// TRANSLATIONS — full bilingual T object
+// ══════════════════════════════════════════
 const T={
   en:{
     appTitle:'AgroSense',appSub:'Livestock & Fisheries IoT Monitor',live:'Live',
@@ -300,14 +436,13 @@ const T={
     btnTrig:'🚨 Trigger Alert',btnStop:'■ Stop',btnTest:'▶ Test Beep',
     f1:'Short Beep',f2:'Long Tone',f3:'Pulse',f4:'Siren',
     buzOff:'■ OFF',buzOn:'■ BUZZING',
-    mLS_tag:'— LIVESTOCK MODE',mFS_tag:'— FISHERIES MODE',
     allOk:'✓ All parameters within safe range — System Normal',
     stAlert:'🚨 ALERT: ',stWarn:'⚠ Warning: ',
     lTemp:'Temperature',lHum:'Humidity',lGas:'Gas / Air Quality (MQ-135)',lSnd:'Sound Detection (Digital)',
     lSafe:'Safe Range',lZone:'Safe Zone',lAlrt:'Alert',rMin:'Min',rMax:'Max',
     lHist:'History (last 20 readings)',
-    sNorm:'Normal',sNear:'Near Limit',sCrit:'CRITICAL',
-    sElev:'Elevated',sClean:'Clean Air',sEGas:'Elevated Gas',sTox:'TOXIC LEVEL',
+    sNorm:'Normal',sNear:'Near Limit',sCrit:'CRITICAL',sElev:'Elevated',
+    sClean:'Clean Air',sEGas:'Elevated Gas',sTox:'TOXIC LEVEL',
     sSil:'● Silent — OK',sSnd:'⚠ Sound Detected',vSil:'SILENT',vEvt:'EVENT!',
     sndInfo:'Digital: <span style="color:var(--text)">0 = Silent</span> / <span style="color:var(--red)">1 = Sound Event</span><br>Threshold: <span style="color:var(--text)">≥85 dB indicates stress</span><br>Session alerts: ',
     spTitle:'Species-Specific Safe Parameter Ranges',
@@ -316,8 +451,42 @@ const T={
     logTitle:'🚨 Alert Log',logClr:'Clear',logEmpty:'No alerts — system running normally.',
     aTemp:['Temperature near limit','Temperature CRITICAL'],
     aHum:['Humidity near limit','Humidity CRITICAL'],
-    aGas:['Gas elevated','Gas CRITICAL'],
-    aSnd:'Sound event',
+    aGas:['Gas elevated','Gas CRITICAL'],aSnd:'Sound event',
+    // ── DIGITAL TWIN ──────────────────────────────────────
+    twinTitle:'🧠 Digital Twin — Virtual Barn Model',
+    floorTitle:'📐 Barn Floor Plan — Live View',
+    heatTitle:'🌡️ Barn Heat Density Map',
+    stressHistTitle:'📈 Stress Score History',
+    fusionTitle:'🔬 Multi-Sensor Fusion Score',
+    fusLblTemp:'TEMP',fusLblGas:'GAS',fusLblHum:'HUMIDITY',fusLblOverall:'OVERALL',
+    mlTitle:'🤖 ML Prediction (Linear Regression)',
+    mlTempLbl:'Temp in 1h:',mlTrendLbl:'Trend:',mlStressLbl:'Stress Risk:',mlConfLbl:'Confidence:',
+    ctrlTitle:'🎛️ Barn Controls (Bidirectional)',
+    ctrlFanLbl:'🌀 Fan',ctrlDoorLbl:'🚪 Barn Door',ctrlMistLbl:'💦 Mister',ctrlLightLbl:'💡 Light',
+    ctrlAutoMode:'Auto-mode: monitoring',
+    ctrlLastAction:'Last action:',ctrlActivatedTxt:'activated',ctrlStoppedTxt:'stopped',
+    recoTitle:'💡 Smart Recommendations',
+    stressOld:'20 readings ago',stressNow:'now',
+    stressWarn:'WARN',stressCrit:'CRIT',
+    heatIndexLbl:'HEAT INDEX',
+    fusLow:'LOW',fusMed:'MED',fusHigh:'HIGH',
+    mlRising:'↑ Rising',mlFalling:'↓ Falling',mlStable:'→ Stable',
+    mlSafe:'SAFE',mlWarning:'WARNING',mlCritical:'CRITICAL',
+    fpStallA:'STALL A',fpStallB:'STALL B',fpCorridor:'CORRIDOR',fpVent:'VENTILATION',
+    fpVentShort:'VENT',
+    fpDoorOpen:'DOOR OPEN',fpDoorClosed:'DOOR CLOSED',fpLightsOn:'💡 LIGHTS ON',fpMistOn:'💦 MIST ON',
+    ctrlOff:'OFF',ctrlOn:'ON ✓',ctrlClosed:'CLOSED',ctrlOpen:'OPEN ✓',
+    ctrlActivated:'▶ Activated',ctrlDeactivated:'■ Deactivated',
+    recoFanCrit:'🌀 ACTIVATE FAN — critical temp',
+    recoFanWarn:'💨 Monitor airflow — temp rising',
+    recoGasCrit:'🚪 OPEN BARN DOORS — gas critical',
+    recoGasWarn:'⚠️ Check ventilation — gas elevated',
+    recoHumHigh:'💧 Reduce moisture — humidity high',
+    recoHumLow:'💧 Add water source — humidity low',
+    recoSound:'🔊 Check animals — noise detected',
+    recoImmediate:'🚨 IMMEDIATE ACTION REQUIRED',
+    recoNormal:'✓ All systems normal',
+    twinDigitalAlert:'Digital Twin detected livestock stress'
   },
   ta:{
     appTitle:'அக்ரோசென்ஸ்',appSub:'கால்நடை & மீன்வளர்ப்பு IoT கண்காணிப்பு',live:'நேரலை',
@@ -327,14 +496,13 @@ const T={
     btnTrig:'🚨 எச்சரிக்கை',btnStop:'■ நிறுத்து',btnTest:'▶ சோதனை',
     f1:'குறு ஒலி',f2:'நீண்ட தொனி',f3:'துடிப்பு',f4:'சைரன்',
     buzOff:'■ அணைவு',buzOn:'■ ஒலிக்கிறது',
-    mLS_tag:'— கால்நடை பயன்முறை',mFS_tag:'— மீன்வளர்ப்பு பயன்முறை',
     allOk:'✓ அனைத்து அளவுருக்களும் பாதுகாப்பான வரம்பிற்குள் — இயல்பு நிலை',
     stAlert:'🚨 எச்சரிக்கை: ',stWarn:'⚠ எச்சரிப்பு: ',
     lTemp:'வெப்பநிலை',lHum:'ஈரப்பதம்',lGas:'வாயு / காற்று தரம் (MQ-135)',lSnd:'ஒலி கண்டறிதல் (டிஜிட்டல்)',
     lSafe:'பாதுகாப்பு வரம்பு',lZone:'பாதுகாப்பு மண்டலம்',lAlrt:'எச்சரிக்கை',rMin:'குறைந்தபட்சம்',rMax:'அதிகபட்சம்',
     lHist:'வரலாறு (கடைசி 20 அளவீடுகள்)',
-    sNorm:'இயல்பு',sNear:'வரம்பில்',sCrit:'அவசரம்',
-    sElev:'உயர்வு',sClean:'தூய காற்று',sEGas:'வாயு உயர்வு',sTox:'நச்சு நிலை',
+    sNorm:'இயல்பு',sNear:'வரம்பில்',sCrit:'அவசரம்',sElev:'உயர்வு',
+    sClean:'தூய காற்று',sEGas:'வாயு உயர்வு',sTox:'நச்சு நிலை',
     sSil:'● அமைதி — சரி',sSnd:'⚠ ஒலி கண்டறியப்பட்டது',vSil:'அமைதி',vEvt:'ஒலி!',
     sndInfo:'டிஜிட்டல்: <span style="color:var(--text)">0 = அமைதி</span> / <span style="color:var(--red)">1 = ஒலி நிகழ்வு</span><br>வரம்பு: <span style="color:var(--text)">≥85 dB மன அழுத்தம்</span><br>அமர்வு எச்சரிக்கைகள்: ',
     spTitle:'இனம்-குறிப்பிட்ட பாதுகாப்பு அளவுரு வரம்புகள்',
@@ -343,118 +511,88 @@ const T={
     logTitle:'🚨 எச்சரிக்கை பதிவு',logClr:'அழி',logEmpty:'எச்சரிக்கை இல்லை — கணினி இயல்பாக இயங்குகிறது.',
     aTemp:['வெப்பநிலை வரம்பு அருகில்','வெப்பநிலை அவசரம்'],
     aHum:['ஈரப்பதம் உயர்வு','ஈரப்பதம் அவசரம்'],
-    aGas:['வாயு அளவு உயர்ந்தது','வாயு அவசரம்'],
-    aSnd:'ஒலி நிகழ்வு',
+    aGas:['வாயு அளவு உயர்ந்தது','வாயு அவசரம்'],aSnd:'ஒலி நிகழ்வு',
+    // ── டிஜிட்டல் இரட்டை ──────────────────────────────────
+    twinTitle:'🧠 டிஜிட்டல் இரட்டை — மெய்நிகர் தொழுவம்',
+    floorTitle:'📐 தொழுவ அமைப்பு — நேரலை காட்சி',
+    heatTitle:'🌡️ தொழுவ வெப்ப அடர்த்தி வரைபடம்',
+    stressHistTitle:'📈 மன அழுத்த மதிப்பெண் வரலாறு',
+    fusionTitle:'🔬 பல-உணரி இணைவு மதிப்பெண்',
+    fusLblTemp:'வெப்பம்',fusLblGas:'வாயு',fusLblHum:'ஈரப்பதம்',fusLblOverall:'மொத்தம்',
+    mlTitle:'🤖 ML கணிப்பு (நேரியல் பின்னடைவு)',
+    mlTempLbl:'1 மணி வெப்பம்:',mlTrendLbl:'போக்கு:',mlStressLbl:'அழுத்த அபாயம்:',mlConfLbl:'நம்பகத்தன்மை:',
+    ctrlTitle:'🎛️ தொழுவ கட்டுப்பாடுகள் (இருதரப்பு)',
+    ctrlFanLbl:'🌀 விசிறி',ctrlDoorLbl:'🚪 தொழுவ கதவு',ctrlMistLbl:'💦 நீர்த்தெளிப்பி',ctrlLightLbl:'💡 விளக்கு',
+    ctrlAutoMode:'தானியங்கி: கண்காணிப்பு',
+    ctrlLastAction:'கடைசி செயல்:',ctrlActivatedTxt:'இயக்கப்பட்டது',ctrlStoppedTxt:'நிறுத்தப்பட்டது',
+    recoTitle:'💡 திறன்மிகு பரிந்துரைகள்',
+    stressOld:'20 அளவீடுகளுக்கு முன்',stressNow:'இப்போது',
+    stressWarn:'எச்சரிப்பு',stressCrit:'அவசரம்',
+    heatIndexLbl:'வெப்ப அட்டவணை',
+    fusLow:'குறைவு',fusMed:'நடுத்தரம்',fusHigh:'அதிகம்',
+    mlRising:'↑ உயர்கிறது',mlFalling:'↓ குறைகிறது',mlStable:'→ நிலையானது',
+    mlSafe:'பாதுகாப்பு',mlWarning:'எச்சரிக்கை',mlCritical:'அவசரம்',
+    fpStallA:'தொழுவம் A',fpStallB:'தொழுவம் B',fpCorridor:'நடைபாதை',fpVent:'காற்றோட்டம்',
+    fpVentShort:'காற்று',
+    fpDoorOpen:'கதவு திறந்தது',fpDoorClosed:'கதவு மூடியது',fpLightsOn:'💡 விளக்கு இயக்கம்',fpMistOn:'💦 நீர்த்தெளிப்பு',
+    ctrlOff:'அணைவு',ctrlOn:'இயக்கம் ✓',ctrlClosed:'மூடியது',ctrlOpen:'திறந்தது ✓',
+    ctrlActivated:'▶ இயக்கப்பட்டது',ctrlDeactivated:'■ நிறுத்தப்பட்டது',
+    recoFanCrit:'🌀 விசிறியை இயக்கு — அவசர வெப்பம்',
+    recoFanWarn:'💨 காற்றோட்டம் கவனி — வெப்பம் உயர்கிறது',
+    recoGasCrit:'🚪 கதவை திற — வாயு அவசரம்',
+    recoGasWarn:'⚠️ காற்றோட்டம் சரிபார் — வாயு உயர்வு',
+    recoHumHigh:'💧 ஈரப்பதம் குறை — அதிக ஈரம்',
+    recoHumLow:'💧 நீர் சேர் — குறைந்த ஈரம்',
+    recoSound:'🔊 விலங்குகளை சரிபார் — ஒலி கண்டறியப்பட்டது',
+    recoImmediate:'🚨 உடனடி நடவடிக்கை தேவை',
+    recoNormal:'✓ அனைத்தும் இயல்பு',
+    twinDigitalAlert:'டிஜிட்டல் இரட்டை கால்நடை மன அழுத்தம் கண்டறிந்தது'
   }
 };
 
-// ── MODES ─────────────────────────────────────
-const MODES={
-  livestock:{
-    temp:{min:0,max:45,safeMin:10,safeMax:32},
-    hum:{min:0,max:100,safeMin:50,safeMax:80},
-    gas:{min:0,max:4095,safeMin:0,safeMax:800},
-    sp:{
-      en:[
-        {n:'Cattle',t:'Livestock',r:[['Temp THI comfort','< 72 THI (≈10–26°C)'],['Humidity','50–80%'],['NH₃ (Ammonia)','< 25 ppm'],['CO₂','< 3000 ppm'],['Noise stress','< 85 dB']]},
-        {n:'Goat / Sheep',t:'Livestock',r:[['Temperature','18–30°C'],['Humidity','55–75%'],['NH₃','< 20 ppm'],['Noise stress','< 80 dB']]},
-        {n:'Swine / Pig',t:'Livestock',r:[['Temperature','16–26°C'],['Humidity','50–70%'],['NH₃','< 10 ppm (EU)'],['CO₂','< 3000 ppm']]},
-      ],
-      ta:[
-        {n:'மாடு',t:'கால்நடை',r:[['வெப்பநிலை THI','< 72 THI (≈10–26°C)'],['ஈரப்பதம்','50–80%'],['NH₃ (அம்மோனியா)','< 25 ppm'],['CO₂','< 3000 ppm'],['ஒலி மன அழுத்தம்','< 85 dB']]},
-        {n:'ஆடு / செம்மறி',t:'கால்நடை',r:[['வெப்பநிலை','18–30°C'],['ஈரப்பதம்','55–75%'],['NH₃','< 20 ppm'],['ஒலி','< 80 dB']]},
-        {n:'பன்றி',t:'கால்நடை',r:[['வெப்பநிலை','16–26°C'],['ஈரப்பதம்','50–70%'],['NH₃','< 10 ppm'],['CO₂','< 3000 ppm']]},
-      ]
-    },
-    ref:{
-      en:[['Temperature','Cattle / Goat','10–32°C','> 35°C','FAO Livestock & Climate; ASHRAE 241'],['Humidity','Cattle Barn','50–80% RH','> 85% RH','MWPS-32 Livestock Housing'],['Gas (MQ-135)','Barn NH₃/CO₂ proxy','0–800 ADC','> 1500 ADC','OSHA PEL: NH₃ 25ppm; EU Dir. 2008/120/EC'],['Sound','Stress detection','0 (silent)','1 (> 85 dB)','OIE Animal Welfare Art. 7.1']],
-      ta:[['வெப்பநிலை','மாடு / ஆடு','10–32°C','> 35°C','FAO கால்நடை & காலநிலை; ASHRAE 241'],['ஈரப்பதம்','மாட்டுத் தொழுவம்','50–80% RH','> 85% RH','MWPS-32 கால்நடை வீட்டுவசதி'],['வாயு (MQ-135)','NH₃/CO₂ பிரதிநிதி','0–800 ADC','> 1500 ADC','OSHA PEL: NH₃ 25ppm; EU Dir. 2008/120/EC'],['ஒலி','மன அழுத்த கண்டறிதல்','0 (அமைதி)','1 (> 85 dB)','OIE விலங்கு நலம் Art. 7.1']],
-    }
-  },
-  fisheries:{
-    temp:{min:0,max:45,safeMin:22,safeMax:30},
-    hum:{min:0,max:100,safeMin:60,safeMax:95},
-    gas:{min:0,max:4095,safeMin:0,safeMax:400},
-    sp:{
-      en:[
-        {n:'Tilapia',t:'Freshwater Fish',r:[['Water Temp','25–30°C (optimal 28°C)'],['DO (Dissolved O₂)','> 5 mg/L'],['NH₃','< 0.02 mg/L'],['pH','6.5–8.5']]},
-        {n:'Catfish / Pangasius',t:'Freshwater Fish',r:[['Water Temp','26–30°C'],['DO','> 4 mg/L'],['NH₃','< 0.05 mg/L'],['pH','6.5–8.0']]},
-        {n:'Shrimp (Vannamei)',t:'Marine / Brackish',r:[['Water Temp','23–30°C'],['Salinity','15–25 ppt'],['DO','> 5 mg/L'],['NH₃','< 0.1 mg/L']]},
-      ],
-      ta:[
-        {n:'திலாப்பியா',t:'நன்னீர் மீன்',r:[['நீர் வெப்பநிலை','25–30°C (சிறந்தது 28°C)'],['DO (கரைந்த O₂)','> 5 mg/L'],['NH₃','< 0.02 mg/L'],['pH','6.5–8.5']]},
-        {n:'கெளுத்தி / பங்காசியஸ்',t:'நன்னீர் மீன்',r:[['நீர் வெப்பநிலை','26–30°C'],['DO','> 4 mg/L'],['NH₃','< 0.05 mg/L'],['pH','6.5–8.0']]},
-        {n:'இறால் (வன்னாமி)',t:'கடல் / நலிவு நீர்',r:[['நீர் வெப்பநிலை','23–30°C'],['உப்புத்தன்மை','15–25 ppt'],['DO','> 5 mg/L'],['NH₃','< 0.1 mg/L']]},
-      ]
-    },
-    ref:{
-      en:[['Temperature','Fish hatchery shed','22–32°C','> 38°C','FAO Aquaculture Engineering; WorldFish Center'],['Humidity','Indoor aquaculture','60–95% RH','< 40% or > 95%','FAO Technical Paper 408'],['Gas (MQ-135)','H₂S / NH₃ pond proxy','0–400 ADC','> 800 ADC','WHO Aquatic Env.; NACA Tech Reports'],['Sound','Stress minimization','0 (silent)','1 (shock/impact)','FAO Code of Conduct Art. 9.1.3']],
-      ta:[['வெப்பநிலை','மீன் குஞ்சு பொரிப்பகம்','22–32°C','> 38°C','FAO நீர்வள பொறியியல்; WorldFish'],['ஈரப்பதம்','உள்புற நீர்வளர்ப்பு','60–95% RH','< 40% or > 95%','FAO தொழில்நுட்ப ஆவணம் 408'],['வாயு (MQ-135)','H₂S / NH₃ குளம் பிரதிநிதி','0–400 ADC','> 800 ADC','WHO நீர்சூழல்; NACA அறிக்கைகள்'],['ஒலி','மன அழுத்த குறைப்பு','0 (அமைதி)','1 (அதிர்வு)','FAO நடத்தை நெறிமுறை Art. 9.1.3']],
-    }
-  }
-};
+// ══════════════════════════════════════════
+// MODE DATA
+// ══════════════════════════════════════════
+const MODES={livestock:{temp:{min:0,max:45,safeMin:10,safeMax:32},hum:{min:0,max:100,safeMin:50,safeMax:80},gas:{min:0,max:4095,safeMin:0,safeMax:800},sp:{en:[{n:'Cattle',t:'Livestock',r:[['Temp THI comfort','< 72 THI (≈10–26°C)'],['Humidity','50–80%'],['NH₃ (Ammonia)','< 25 ppm'],['CO₂','< 3000 ppm'],['Noise stress','< 85 dB']]},{n:'Goat / Sheep',t:'Livestock',r:[['Temperature','18–30°C'],['Humidity','55–75%'],['NH₃','< 20 ppm'],['Noise stress','< 80 dB']]},{n:'Swine / Pig',t:'Livestock',r:[['Temperature','16–26°C'],['Humidity','50–70%'],['NH₃','< 10 ppm (EU)'],['CO₂','< 3000 ppm']]}],ta:[{n:'மாடு',t:'கால்நடை',r:[['வெப்பநிலை THI','< 72 THI'],['ஈரப்பதம்','50–80%'],['NH₃','< 25 ppm'],['CO₂','< 3000 ppm'],['ஒலி','< 85 dB']]},{n:'ஆடு',t:'கால்நடை',r:[['வெப்பநிலை','18–30°C'],['ஈரப்பதம்','55–75%'],['NH₃','< 20 ppm'],['ஒலி','< 80 dB']]},{n:'பன்றி',t:'கால்நடை',r:[['வெப்பநிலை','16–26°C'],['ஈரப்பதம்','50–70%'],['NH₃','< 10 ppm'],['CO₂','< 3000 ppm']]}]},ref:{en:[['Temperature','Cattle / Goat','10–32°C','> 35°C','FAO Livestock & Climate'],['Humidity','Cattle Barn','50–80% RH','> 85% RH','MWPS-32'],['Gas (MQ-135)','Barn NH₃/CO₂','0–800 ADC','> 1500 ADC','OSHA PEL'],['Sound','Stress','0 (silent)','1 (> 85 dB)','OIE Art. 7.1']],ta:[['வெப்பநிலை','மாடு','10–32°C','> 35°C','FAO'],['ஈரப்பதம்','தொழுவம்','50–80% RH','> 85% RH','MWPS-32'],['வாயு','NH₃/CO₂','0–800 ADC','> 1500 ADC','OSHA'],['ஒலி','மன அழுத்தம்','0','1 (> 85 dB)','OIE']]}},fisheries:{temp:{min:0,max:45,safeMin:22,safeMax:30},hum:{min:0,max:100,safeMin:60,safeMax:95},gas:{min:0,max:4095,safeMin:0,safeMax:400},sp:{en:[{n:'Tilapia',t:'Freshwater Fish',r:[['Water Temp','25–30°C'],['DO','> 5 mg/L'],['NH₃','< 0.02 mg/L'],['pH','6.5–8.5']]},{n:'Catfish',t:'Freshwater Fish',r:[['Water Temp','26–30°C'],['DO','> 4 mg/L'],['NH₃','< 0.05 mg/L'],['pH','6.5–8.0']]},{n:'Shrimp',t:'Marine',r:[['Water Temp','23–30°C'],['Salinity','15–25 ppt'],['DO','> 5 mg/L'],['NH₃','< 0.1 mg/L']]}],ta:[{n:'திலாப்பியா',t:'நன்னீர் மீன்',r:[['நீர் வெப்பநிலை','25–30°C'],['DO','> 5 mg/L'],['NH₃','< 0.02 mg/L'],['pH','6.5–8.5']]},{n:'கெளுத்தி',t:'நன்னீர் மீன்',r:[['நீர் வெப்பநிலை','26–30°C'],['DO','> 4 mg/L'],['NH₃','< 0.05 mg/L'],['pH','6.5–8.0']]},{n:'இறால்',t:'கடல்',r:[['நீர் வெப்பநிலை','23–30°C'],['உப்புத்தன்மை','15–25 ppt'],['DO','> 5 mg/L'],['NH₃','< 0.1 mg/L']]}]},ref:{en:[['Temperature','Fish hatchery','22–32°C','> 38°C','FAO Aquaculture'],['Humidity','Indoor aquaculture','60–95% RH','< 40% or > 95%','FAO Tech 408'],['Gas (MQ-135)','H₂S/NH₃ pond','0–400 ADC','> 800 ADC','WHO Aquatic'],['Sound','Stress min','0 (silent)','1 (shock)','FAO Art. 9.1.3']],ta:[['வெப்பநிலை','மீன் குஞ்சு','22–32°C','> 38°C','FAO'],['ஈரப்பதம்','உள்புற','60–95% RH','< 40% or > 95%','FAO'],['வாயு','H₂S/NH₃','0–400 ADC','> 800 ADC','WHO'],['ஒலி','குறைப்பு','0','1 (அதிர்வு)','FAO']]}}};
 
-// ── STATE ─────────────────────────────────────
-let lang='en', mode='livestock';
-let hist={temp:[],hum:[],gas:[]};
-let sndCnt=0, buzCntVal=0;
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+let lang='en',mode='livestock';
+let hist={temp:[],hum:[],gas:[],stress:[]};
+let sndCnt=0,buzCntVal=0;
 let sensor={temp:30.5,hum:52,gas:48,sound:1};
-let audioCtx=null, buzIv=null, buzActive=false;
-let buzFreq=880, buzPat='short';
+let audioCtx=null,buzIv=null,buzActive=false;
+let buzFreq=880,buzPat='short';
+const controls={fan:false,door:false,mist:false,light:false};
 
-// ── AUDIO ─────────────────────────────────────
+// ══════════════════════════════════════════
+// AUDIO
+// ══════════════════════════════════════════
 function getCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;}
-function beep(f,dur,vol){
-  try{const c=getCtx();const o=c.createOscillator();const g=c.createGain();
-  o.connect(g);g.connect(c.destination);o.type='square';o.frequency.value=f;
-  g.gain.setValueAtTime(vol*.3,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+dur);
-  o.start(c.currentTime);o.stop(c.currentTime+dur);}catch(e){}}
-function playPat(pat,f,v){
-  if(pat==='short'){beep(f,.15,v);}
-  else if(pat==='long'){beep(f,.6,v);}
-  else if(pat==='pulse'){beep(f,.08,v);setTimeout(()=>beep(f,.08,v),160);setTimeout(()=>beep(f,.08,v),320);}
-  else if(pat==='siren'){beep(f,.25,v);setTimeout(()=>beep(f*.75,.25,v),290);}
-}
-function triggerBuzzer(){
-  if(buzActive)return;
-  buzActive=true;buzCntVal++;
-  document.getElementById('buzCnt').textContent=buzCntVal;
-  document.getElementById('buzVis').classList.add('buz-on');
-  const t=T[lang];
-  document.getElementById('buzState').className='buz-state bs-on';
-  document.getElementById('buzState').textContent=t.buzOn;
-  const v=parseFloat(document.getElementById('volSlider').value);
-  playPat(buzPat,buzFreq,v);
-  const delay=buzPat==='pulse'?650:buzPat==='siren'?720:850;
-  buzIv=setInterval(()=>{if(!buzActive){clearInterval(buzIv);return;}playPat(buzPat,buzFreq,v);},delay);
-}
-function stopBuzzer(){
-  buzActive=false;clearInterval(buzIv);
-  document.getElementById('buzVis').classList.remove('buz-on');
-  const t=T[lang];
-  document.getElementById('buzState').className='buz-state bs-off';
-  document.getElementById('buzState').textContent=t.buzOff;
-}
+function beep(f,dur,vol){try{const c=getCtx();const o=c.createOscillator();const g=c.createGain();o.connect(g);g.connect(c.destination);o.type='square';o.frequency.value=f;g.gain.setValueAtTime(vol*.3,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+dur);o.start(c.currentTime);o.stop(c.currentTime+dur);}catch(e){}}
+function playPat(pat,f,v){if(pat==='short')beep(f,.15,v);else if(pat==='long')beep(f,.6,v);else if(pat==='pulse'){beep(f,.08,v);setTimeout(()=>beep(f,.08,v),160);setTimeout(()=>beep(f,.08,v),320);}else if(pat==='siren'){beep(f,.25,v);setTimeout(()=>beep(f*.75,.25,v),290);}}
+function triggerBuzzer(){if(buzActive)return;buzActive=true;buzCntVal++;document.getElementById('buzCnt').textContent=buzCntVal;document.getElementById('buzVis').classList.add('buz-on');const t=T[lang];document.getElementById('buzState').className='buz-state bs-on';document.getElementById('buzState').textContent=t.buzOn;const v=parseFloat(document.getElementById('volSlider').value);playPat(buzPat,buzFreq,v);const delay=buzPat==='pulse'?650:buzPat==='siren'?720:850;buzIv=setInterval(()=>{if(!buzActive){clearInterval(buzIv);return;}playPat(buzPat,buzFreq,v);},delay);}
+function stopBuzzer(){buzActive=false;clearInterval(buzIv);document.getElementById('buzVis').classList.remove('buz-on');const t=T[lang];document.getElementById('buzState').className='buz-state bs-off';document.getElementById('buzState').textContent=t.buzOff;}
 function testBuzzer(){const v=parseFloat(document.getElementById('volSlider').value);playPat(buzPat,buzFreq,v);}
-function setFreq(f,pat){
-  buzFreq=f;buzPat=pat;
-  document.querySelectorAll('.freq-btn').forEach(b=>b.classList.remove('act'));
-  const m={short:'f1',long:'f2',pulse:'f3',siren:'f4'};
-  document.getElementById(m[pat]).classList.add('act');
-  if(buzActive){stopBuzzer();setTimeout(triggerBuzzer,100);}
-}
+function setFreq(f,pat){buzFreq=f;buzPat=pat;document.querySelectorAll('.freq-btn').forEach(b=>b.classList.remove('act'));const m={short:'f1',long:'f2',pulse:'f3',siren:'f4'};document.getElementById(m[pat]).classList.add('act');if(buzActive){stopBuzzer();setTimeout(triggerBuzzer,100);}}
 
-// ── LANGUAGE ─────────────────────────────────
+// ══════════════════════════════════════════
+// LANGUAGE
+// ══════════════════════════════════════════
 function setLang(l){
   lang=l;
   document.body.classList.toggle('tamil',l==='ta');
   document.querySelectorAll('.lang-btn').forEach((b,i)=>b.classList.toggle('active',['en','ta'][i]===l));
   applyLang();renderSp();renderRef();
 }
+
 function applyLang(){
   const t=T[lang];
   const s=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
   const h=(id,v)=>{const e=document.getElementById(id);if(e)e.innerHTML=v;};
+
+  // ── Header / Buzzer ──────────────────────────────────────
   s('appTitle',t.appTitle);s('appSub',t.appSub);s('liveTxt',t.live);
   s('mLS',t.mLS);s('mFS',t.mFS);
   s('buzTitle',t.buzTitle);s('buzSub',t.buzSub);
@@ -463,23 +601,340 @@ function applyLang(){
   h('btnTrig',t.btnTrig);s('btnStop',t.btnStop);s('btnTest',t.btnTest);
   s('f1',t.f1);s('f2',t.f2);s('f3',t.f3);s('f4',t.f4);
   s('buzState',buzActive?t.buzOn:t.buzOff);
+
+  // ── Sensor cards ─────────────────────────────────────────
   s('lTemp',t.lTemp);s('lHum',t.lHum);s('lGas',t.lGas);s('lSnd',t.lSnd);
   s('lSafe',t.lSafe);s('lSafe2',t.lSafe);s('lZone',t.lZone);s('lAlrt',t.lAlrt);
   s('rMin',t.rMin);s('rMax',t.rMax);
   s('lHist',t.lHist);s('lHist2',t.lHist);s('lHist3',t.lHist);
-  s('modeTag','— '+(lang==='en'?MODES[mode]['mLS_tag']||'LIVESTOCK MODE':T.ta.mLS_tag));
-  // mode tag based on current mode
+
+  // ── Mode tag ─────────────────────────────────────────────
   const ml=document.getElementById('modeTag');
-  if(ml)ml.textContent='— '+(lang==='en'?(mode==='livestock'?'LIVESTOCK MODE':'FISHERIES MODE'):(mode==='livestock'?'கால்நடை பயன்முறை':'மீன்வளர்ப்பு பயன்முறை'));
+  if(ml)ml.textContent='— '+(lang==='en'
+    ?(mode==='livestock'?'LIVESTOCK MODE':'FISHERIES MODE')
+    :(mode==='livestock'?'கால்நடை பயன்முறை':'மீன்வளர்ப்பு பயன்முறை'));
+
+  // ── Reference / Species ──────────────────────────────────
   s('spTitle',t.spTitle);s('refTitle',t.refTitle);
   s('thP',t.thP);s('thM',t.thM);s('thS',t.thS);s('thA',t.thA);s('thSr',t.thSr);
+
+  // ── Log ──────────────────────────────────────────────────
   s('logTitle',t.logTitle);s('logClr',t.logClr);
-  // sound info
-  const sc=document.getElementById('sndCnt');const cnt=sc?sc.textContent:'0';
+
+  // ── Sound card ───────────────────────────────────────────
+  const sc=document.getElementById('sndCnt');
+  const cnt=sc?sc.textContent:'0';
   h('sndInfo',t.sndInfo+'<span id="sndCnt" style="color:var(--amber)">'+cnt+'</span>');
+
+  // ── Digital Twin section titles ──────────────────────────
+  s('twinTitle',t.twinTitle);
+  s('floorTitle',t.floorTitle);
+  s('heatTitle',t.heatTitle);
+  s('stressHistTitle',t.stressHistTitle);
+  s('fusionTitle',t.fusionTitle);
+
+  // ── Fusion gauge labels ───────────────────────────────────
+  s('fusLblTemp',t.fusLblTemp);
+  s('fusLblGas',t.fusLblGas);
+  s('fusLblHum',t.fusLblHum);
+  s('fusLblOverall',t.fusLblOverall);
+
+  // ── ML Prediction labels ──────────────────────────────────
+  s('mlTitle',t.mlTitle);
+  s('mlTempLbl',t.mlTempLbl);
+  s('mlTrendLbl',t.mlTrendLbl);
+  s('mlStressLbl',t.mlStressLbl);
+  s('mlConfLbl',t.mlConfLbl);
+
+  // ── Barn Controls labels ──────────────────────────────────
+  s('ctrlTitle',t.ctrlTitle);
+  s('ctrlFanLbl',t.ctrlFanLbl);
+  s('ctrlDoorLbl',t.ctrlDoorLbl);
+  s('ctrlMistLbl',t.ctrlMistLbl);
+  s('ctrlLightLbl',t.ctrlLightLbl);
+
+  // ── Refresh control button text to match new lang ─────────
+  const fanBtn=document.getElementById('btnFan');
+  const doorBtn=document.getElementById('btnDoor');
+  const mistBtn=document.getElementById('btnMist');
+  const lightBtn=document.getElementById('btnLight');
+  if(fanBtn)  fanBtn.textContent  = controls.fan   ? t.ctrlOn     : t.ctrlOff;
+  if(doorBtn) doorBtn.textContent = controls.door  ? t.ctrlOpen   : t.ctrlClosed;
+  if(mistBtn) mistBtn.textContent = controls.mist  ? t.ctrlOn     : t.ctrlOff;
+  if(lightBtn)lightBtn.textContent= controls.light ? t.ctrlOn     : t.ctrlOff;
+
+  // ── ctrlStatus default ────────────────────────────────────
+  const cs=document.getElementById('ctrlStatus');
+  if(cs && cs.textContent==='' || cs.textContent==='Auto-mode: monitoring' || cs.textContent==='தானியங்கி: கண்காணிப்பு'){
+    s('ctrlStatus',t.ctrlAutoMode);
+  }
+
+  // ── Smart Recommendations title ───────────────────────────
+  s('recoTitle',t.recoTitle);
+
+  // ── Stress history time labels ────────────────────────────
+  s('stressOld',t.stressOld);
+  s('stressNow',t.stressNow);
+
+  // ── Redraw canvases with new language ─────────────────────
+  twin.renderHeatmap();
+  drawFloorplan(
+    twin.state.stressLevel||'SAFE',
+    sensor.temp,
+    sensor.gas
+  );
+  drawStressHistory(hist.stress);
+  updateFusionGauges(sensor.temp,sensor.gas,sensor.hum,twin.state.stressScore||0);
+  updateMLPrediction(hist.temp);
+  updateRecommendations({temperature:sensor.temp,humidity:sensor.hum,gas:sensor.gas,sound:sensor.sound,stressLevel:twin.state.stressLevel||'SAFE'});
 }
 
-// ── SIMULATION ────────────────────────────────
+// ══════════════════════════════════════════
+// BIDIRECTIONAL CONTROLS
+// ══════════════════════════════════════════
+function toggleControl(name){
+  const t=T[lang];
+  controls[name]=!controls[name];
+  const btn=document.getElementById('btn'+name.charAt(0).toUpperCase()+name.slice(1));
+  if(!btn)return;
+  const labels={
+    fan:  [t.ctrlOff,  t.ctrlOn],
+    door: [t.ctrlClosed,t.ctrlOpen],
+    mist: [t.ctrlOff,  t.ctrlOn],
+    light:[t.ctrlOff,  t.ctrlOn]
+  };
+  btn.textContent=controls[name]?labels[name][1]:labels[name][0];
+  btn.style.background=controls[name]?'rgba(34,197,94,0.15)':'var(--surface)';
+  btn.style.borderColor=controls[name]?'var(--green)':'var(--border)';
+  btn.style.color=controls[name]?'var(--green)':'var(--muted)';
+
+  const actionTxt=controls[name]?t.ctrlActivated:t.ctrlDeactivated;
+  addLog(actionTxt+' — '+name.toUpperCase(),controls[name]?'ok':'warn');
+
+  const statusTxt=controls[name]?t.ctrlActivatedTxt:t.ctrlStoppedTxt;
+  document.getElementById('ctrlStatus').textContent=
+    t.ctrlLastAction+' '+statusTxt+' '+name+' '+new Date().toLocaleTimeString();
+}
+
+function autoControl(state){
+  if(state.temperature>34&&!controls.fan)toggleControl('fan');
+  if(state.temperature<=32&&controls.fan)toggleControl('fan');
+  if(state.gas>800&&!controls.door)toggleControl('door');
+  if(state.gas<=600&&controls.door)toggleControl('door');
+  if(state.humidity<45&&!controls.mist)toggleControl('mist');
+  if(state.humidity>=55&&controls.mist)toggleControl('mist');
+}
+
+// ══════════════════════════════════════════
+// FUSION GAUGES
+// ══════════════════════════════════════════
+function drawGauge(canvasId,value,max,color){
+  const c=document.getElementById(canvasId);if(!c)return;
+  const ctx=c.getContext('2d');
+  const W=80,H=80,cx=40,cy=44,r=28;
+  ctx.clearRect(0,0,W,H);
+  const pct=Math.max(0,Math.min(1,value/max));
+  const startAngle=Math.PI*0.75,endAngle=Math.PI*2.25;
+  const fillAngle=startAngle+pct*(endAngle-startAngle);
+  ctx.beginPath();ctx.arc(cx,cy,r,startAngle,endAngle);
+  ctx.strokeStyle='rgba(255,255,255,0.06)';ctx.lineWidth=7;ctx.lineCap='round';ctx.stroke();
+  ctx.beginPath();ctx.arc(cx,cy,r,startAngle,fillAngle);
+  ctx.strokeStyle=color;ctx.lineWidth=7;ctx.lineCap='round';ctx.stroke();
+  ctx.fillStyle=color;ctx.font='bold 13px "Space Mono",monospace';ctx.textAlign='center';
+  ctx.fillText(Math.round(pct*100)+'%',cx,cy+5);
+}
+
+function updateFusionGauges(temp,gas,hum,stressScore){
+  const t=T[lang];
+  const tempRisk=Math.max(0,Math.min(1,(temp-10)/32));
+  const gasRisk=Math.max(0,Math.min(1,gas/1500));
+  const humRisk=hum>60&&hum<80?0:hum>80?(hum-80)/20:(50-hum)/50;
+  const overall=Math.min(1,stressScore/100);
+  const col=v=>v<0.4?'#22c55e':v<0.7?'#f59e0b':'#ef4444';
+  drawGauge('fusionTemp',tempRisk*100,100,col(tempRisk));
+  drawGauge('fusionGas',gasRisk*100,100,col(gasRisk));
+  drawGauge('fusionHum',humRisk*100,100,col(Math.max(0,Math.min(1,humRisk))));
+  drawGauge('fusionOverall',overall*100,100,col(overall));
+  // Localised gauge result labels
+  const lbl=v=>v<40?t.fusLow:v<70?t.fusMed:t.fusHigh;
+  const el=id=>document.getElementById(id);
+  if(el('fusionTempVal'))el('fusionTempVal').textContent=lbl(tempRisk*100);
+  if(el('fusionGasVal'))el('fusionGasVal').textContent=lbl(gasRisk*100);
+  if(el('fusionHumVal'))el('fusionHumVal').textContent=lbl(Math.max(0,humRisk*100));
+  if(el('fusionOverallVal'))el('fusionOverallVal').textContent=lbl(overall*100);
+}
+
+// ══════════════════════════════════════════
+// ML PREDICTION
+// ══════════════════════════════════════════
+function mlPredict(tempHistory){
+  if(!tempHistory||tempHistory.length<6)return null;
+  const n=tempHistory.length;
+  let sumX=0,sumY=0,sumXY=0,sumXX=0;
+  tempHistory.forEach((v,i)=>{sumX+=i;sumY+=v;sumXY+=i*v;sumXX+=i*i;});
+  const slope=(n*sumXY-sumX*sumY)/(n*sumXX-sumX*sumX);
+  const intercept=(sumY-slope*sumX)/n;
+  const pred=intercept+slope*(n+23);
+  const yMean=sumY/n;
+  let ssTot=0,ssRes=0;
+  tempHistory.forEach((v,i)=>{ssTot+=(v-yMean)**2;ssRes+=(v-(intercept+slope*i))**2;});
+  const r2=ssTot>0?Math.max(0,1-ssRes/ssTot):0;
+  return{pred:Math.max(15,Math.min(45,pred)),slope,r2};
+}
+
+function updateMLPrediction(tempHistory){
+  const t=T[lang];
+  const res=mlPredict(tempHistory);if(!res)return;
+  const el=id=>document.getElementById(id);
+  if(el('predTemp')){el('predTemp').textContent=res.pred.toFixed(1)+'°C';el('predTemp').style.color=res.pred>35?'#ef4444':res.pred>32?'#f59e0b':'#22c55e';}
+  if(el('predTrend')){
+    const dir=res.slope>0.05?t.mlRising:res.slope<-0.05?t.mlFalling:t.mlStable;
+    el('predTrend').textContent=dir+' ('+res.slope.toFixed(3)+'/tick)';
+    el('predTrend').style.color=res.slope>0.05?'#ef4444':res.slope<-0.05?'#14b8a6':'#5a7a63';
+  }
+  if(el('predStress')){
+    const risk=res.pred>36?t.mlCritical:res.pred>32?t.mlWarning:t.mlSafe;
+    el('predStress').textContent=risk;
+    el('predStress').style.color=res.pred>36?'#ef4444':res.pred>32?'#f59e0b':'#22c55e';
+  }
+  if(el('predConf'))el('predConf').textContent=(res.r2*100).toFixed(0)+'% R²';
+}
+
+// ══════════════════════════════════════════
+// FLOOR PLAN
+// ══════════════════════════════════════════
+function drawFloorplan(stressLevel,temp,gas){
+  const c=document.getElementById('floorplanCanvas');if(!c)return;
+  const ctx=c.getContext('2d');
+  const t=T[lang];
+  const W=900,H=220;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#050d08';ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='#2a4a35';ctx.lineWidth=3;
+  ctx.strokeRect(20,15,W-40,H-30);
+  const dividers=[280,540,680];
+  dividers.forEach(x=>{ctx.beginPath();ctx.moveTo(x,15);ctx.lineTo(x,H-15);ctx.strokeStyle='#1f3328';ctx.lineWidth=2;ctx.stroke();});
+  const stallTemp=temp,stallBTemp=temp+2,ventTemp=temp-4;
+  const heatGlow=(x1,x2,t2)=>{
+    const cx=(x1+x2)/2,cy=H/2;
+    const intensity=Math.max(0,Math.min(1,(t2-10)/32));
+    const r=Math.min(x2-x1,H)*0.55;
+    const g=ctx.createRadialGradient(cx,cy,0,cx,cy,r);
+    g.addColorStop(0,intensity>0.65?`rgba(239,68,68,${intensity*0.45})`:intensity>0.35?`rgba(245,158,11,${intensity*0.5})`:`rgba(34,197,94,${intensity*0.55})`);
+    g.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.beginPath();ctx.rect(x1+2,16,x2-x1-4,H-32);ctx.fillStyle=g;ctx.fill();
+  };
+  heatGlow(20,280,stallTemp);heatGlow(280,540,stallBTemp);heatGlow(680,880,ventTemp);
+  if(gas>400){
+    const a=Math.min(0.3,(gas-400)/2000);
+    const haze=ctx.createLinearGradient(540,0,680,0);
+    haze.addColorStop(0,'rgba(0,0,0,0)');haze.addColorStop(0.5,`rgba(245,158,11,${a})`);haze.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=haze;ctx.fillRect(540,16,140,H-32);
+  }
+  ctx.fillStyle='rgba(0,0,0,0.08)';
+  for(let y=16;y<H-15;y+=4)ctx.fillRect(20,y,W-40,1);
+  [[100,H*0.38],[185,H*0.62]].forEach(([cx,cy])=>{ctx.font='22px serif';ctx.textAlign='center';ctx.fillText('🐄',cx,cy);});
+  [[370,H*0.38],[455,H*0.62]].forEach(([cx,cy])=>{ctx.font='22px serif';ctx.textAlign='center';ctx.fillText('🐄',cx,cy);});
+  const fanAngle=controls.fan?(Date.now()/200)%(Math.PI*2):0;
+  ctx.save();ctx.translate(780,H/2);ctx.rotate(fanAngle);ctx.font='28px serif';ctx.textAlign='center';ctx.fillText('🌀',0,10);ctx.restore();
+  // Door
+  const doorOpen=controls.door;
+  ctx.fillStyle=doorOpen?'rgba(34,197,94,0.15)':'#0a0f0d';ctx.fillRect(560,H-28,100,18);
+  ctx.strokeStyle=doorOpen?'#22c55e':'#2a4a35';ctx.lineWidth=1.5;ctx.strokeRect(560,H-28,100,18);
+  ctx.fillStyle=doorOpen?'#22c55e':'#5a7a63';ctx.font='8px "Space Mono",monospace';ctx.textAlign='center';
+  ctx.fillText(doorOpen?t.fpDoorOpen:t.fpDoorClosed,610,H-15);
+  // Mister
+  if(controls.mist){
+    ctx.fillStyle='rgba(59,130,246,0.3)';
+    for(let i=0;i<3;i++){ctx.beginPath();ctx.arc(130+i*60,H*0.18,8,0,Math.PI*2);ctx.fill();}
+    ctx.fillStyle='#3b82f6';ctx.font='8px "Space Mono",monospace';ctx.textAlign='center';ctx.fillText(t.fpMistOn,150,H*0.12);
+  }
+  // Light overlay
+  if(controls.light){
+    ctx.fillStyle='rgba(250,204,21,0.08)';ctx.fillRect(22,16,W-44,H-32);
+    ctx.fillStyle='rgba(250,204,21,0.5)';ctx.font='8px "Space Mono",monospace';ctx.textAlign='right';
+    ctx.fillText(t.fpLightsOn,W-30,30);
+  }
+  // Zone labels
+  ctx.font='bold 10px "Space Mono",monospace';
+  const zones=[[t.fpStallA,150,stallTemp],[t.fpStallB,410,stallBTemp],[t.fpCorridor,610,null],[t.fpVent,780,ventTemp]];
+  zones.forEach(([label,cx,zt])=>{
+    ctx.textAlign='center';
+    const tw=ctx.measureText(label).width+14;
+    ctx.fillStyle='rgba(10,15,13,0.8)';
+    ctx.beginPath();ctx.roundRect(cx-tw/2,H-55,tw,16,3);ctx.fill();
+    ctx.fillStyle='#5a7a63';ctx.fillText(label,cx,H-43);
+    if(zt!==null){
+      const intensity=Math.max(0,Math.min(1,(zt-10)/32));
+      ctx.fillStyle=intensity>0.65?'#ef4444':intensity>0.35?'#f59e0b':'#22c55e';
+      ctx.font='bold 12px "Space Mono",monospace';
+      ctx.fillText(zt.toFixed(1)+'°C',cx,H-27);
+      ctx.font='bold 10px "Space Mono",monospace';
+    }
+  });
+  // Stress badge
+  const stressLbl=stressLevel==='SAFE'?t.mlSafe:stressLevel==='WARNING'?t.mlWarning:t.mlCritical;
+  const badgeColor=stressLevel==='SAFE'?'#22c55e':stressLevel==='WARNING'?'#f59e0b':'#ef4444';
+  ctx.font='bold 10px "Space Mono",monospace';ctx.textAlign='right';
+  ctx.fillStyle=badgeColor;ctx.fillText('● '+stressLbl,W-28,32);
+}
+
+// ══════════════════════════════════════════
+// STRESS HISTORY
+// ══════════════════════════════════════════
+function drawStressHistory(data){
+  const c=document.getElementById('stressHistCanvas');if(!c||data.length<2)return;
+  const t=T[lang];
+  const ctx=c.getContext('2d');
+  const W=400,H=80;
+  ctx.clearRect(0,0,W,H);
+  ctx.setLineDash([4,4]);
+  const warn30=H-(30/100)*H,crit60=H-(60/100)*H;
+  ctx.strokeStyle='rgba(245,158,11,0.25)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(0,warn30);ctx.lineTo(W,warn30);ctx.stroke();
+  ctx.strokeStyle='rgba(239,68,68,0.25)';
+  ctx.beginPath();ctx.moveTo(0,crit60);ctx.lineTo(W,crit60);ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.font='8px "Space Mono",monospace';ctx.textAlign='left';
+  ctx.fillStyle='rgba(245,158,11,0.5)';ctx.fillText(t.stressWarn,2,warn30-2);
+  ctx.fillStyle='rgba(239,68,68,0.5)';ctx.fillText(t.stressCrit,2,crit60-2);
+  const x=i=>(i/(data.length-1))*W;
+  const y=v=>H-(Math.min(v,100)/100)*(H-4)-2;
+  ctx.beginPath();ctx.moveTo(x(0),H);
+  data.forEach((v,i)=>ctx.lineTo(x(i),y(v)));
+  ctx.lineTo(x(data.length-1),H);ctx.closePath();
+  ctx.fillStyle='rgba(34,197,94,0.08)';ctx.fill();
+  const last=data[data.length-1];
+  const lineCol=last<30?'#22c55e':last<60?'#f59e0b':'#ef4444';
+  ctx.beginPath();data.forEach((v,i)=>i===0?ctx.moveTo(x(i),y(v)):ctx.lineTo(x(i),y(v)));
+  ctx.strokeStyle=lineCol;ctx.lineWidth=2;ctx.stroke();
+  ctx.beginPath();ctx.arc(x(data.length-1),y(last),4,0,Math.PI*2);
+  ctx.fillStyle=lineCol;ctx.fill();
+}
+
+// ══════════════════════════════════════════
+// SMART RECOMMENDATIONS
+// ══════════════════════════════════════════
+function updateRecommendations(state){
+  const el=document.getElementById('recoList');if(!el)return;
+  const t=T[lang];
+  const recos=[];
+  if(state.temperature>36)      recos.push({c:'#ef4444',txt:t.recoFanCrit});
+  else if(state.temperature>32) recos.push({c:'#f59e0b',txt:t.recoFanWarn});
+  if(state.gas>1000)            recos.push({c:'#ef4444',txt:t.recoGasCrit});
+  else if(state.gas>500)        recos.push({c:'#f59e0b',txt:t.recoGasWarn});
+  if(state.humidity>80)         recos.push({c:'#f59e0b',txt:t.recoHumHigh});
+  else if(state.humidity<40)    recos.push({c:'#f59e0b',txt:t.recoHumLow});
+  if(state.sound===1)           recos.push({c:'#f59e0b',txt:t.recoSound});
+  if(state.stressLevel==='CRITICAL') recos.push({c:'#ef4444',txt:t.recoImmediate});
+  el.innerHTML=recos.length
+    ?recos.map(r=>`<div style="color:${r.c}">${r.txt}</div>`).join('')
+    :`<div style="color:var(--green)">${t.recoNormal}</div>`;
+}
+
+// ══════════════════════════════════════════
+// SENSOR SIMULATION & CORE UPDATE
+// ══════════════════════════════════════════
 function simTick(){
   sensor.temp=Math.max(15,Math.min(42,sensor.temp+(Math.random()-.48)*.5));
   sensor.hum=Math.max(30,Math.min(95,sensor.hum+(Math.random()-.5)*1.2));
@@ -507,72 +962,67 @@ function sparkline(id,data,color){
   ctx.clearRect(0,0,W,H);
   const mn=Math.min(...data),mx=Math.max(...data),r=mx-mn||1;
   const x=i=>(i/(data.length-1))*W;const y=v=>H-((v-mn)/r)*(H-8)-4;
-  ctx.beginPath();ctx.moveTo(x(0),H);data.forEach((v,i)=>ctx.lineTo(x(i),y(v)));ctx.lineTo(x(data.length-1),H);ctx.closePath();ctx.fillStyle=color+'22';ctx.fill();
-  ctx.beginPath();data.forEach((v,i)=>i===0?ctx.moveTo(x(i),y(v)):ctx.lineTo(x(i),y(v)));ctx.strokeStyle=color;ctx.lineWidth=2;ctx.stroke();
+  ctx.beginPath();ctx.moveTo(x(0),H);data.forEach((v,i)=>ctx.lineTo(x(i),y(v)));
+  ctx.lineTo(x(data.length-1),H);ctx.closePath();ctx.fillStyle=color+'22';ctx.fill();
+  ctx.beginPath();data.forEach((v,i)=>i===0?ctx.moveTo(x(i),y(v)):ctx.lineTo(x(i),y(v)));
+  ctx.strokeStyle=color;ctx.lineWidth=2;ctx.stroke();
 }
 function addLog(msg,type){
   const el=document.getElementById('logEmpty');if(el)el.style.display='none';
-  const d=new Date();const tm=[d.getHours(),d.getMinutes(),d.getSeconds()].map(n=>String(n).padStart(2,'0')).join(':');
+  const d=new Date();
+  const tm=[d.getHours(),d.getMinutes(),d.getSeconds()].map(n=>String(n).padStart(2,'0')).join(':');
   const cols={ok:'#22c55e',warn:'#f59e0b',alert:'#ef4444'};
   const e=document.createElement('div');e.className='log-entry';
   e.innerHTML='<span class="log-time">'+tm+'</span><span class="log-dot" style="background:'+cols[type]+'"></span><span>'+msg+'</span>';
   const c=document.getElementById('logCont');c.insertBefore(e,c.firstChild);
   if(c.children.length>20)c.removeChild(c.lastChild);
 }
+
 function update(){
-  simTick();const m=MODES[mode];const t=T[lang];
+  simTick();
+  const m=MODES[mode],t=T[lang];
+  twin.updateSensors(sensor.temp,sensor.hum,sensor.gas,sensor.sound);
+  const twinState=twin.calculateStress();
+  if(twinState.stressLevel==='CRITICAL')addLog(t.twinDigitalAlert,'alert');
   ['temp','hum','gas'].forEach(k=>{hist[k].push(sensor[k]);if(hist[k].length>20)hist[k].shift();});
-  // Temp
+  hist.stress.push(twinState.stressScore);if(hist.stress.length>20)hist.stress.shift();
+  drawFloorplan(twinState.stressLevel,sensor.temp,sensor.gas);
+  drawStressHistory(hist.stress);
+  updateFusionGauges(sensor.temp,sensor.gas,sensor.hum,twinState.stressScore);
+  updateMLPrediction(hist.temp);
+  updateRecommendations({temperature:sensor.temp,humidity:sensor.hum,gas:sensor.gas,sound:sensor.sound,stressLevel:twinState.stressLevel});
+  autoControl(sensor);
+  twin.renderHeatmap();
   const tS=getSt(sensor.temp,m.temp.safeMin,m.temp.safeMax);
   setCard('temp',tS,sensor.temp.toFixed(1)+' <span class="card-unit">°C</span>',tS==='ok'?t.sNorm:tS==='warn'?t.sNear:t.sCrit);
   setNdl('temp',sensor.temp,m.temp.min,m.temp.max,m.temp.safeMin,m.temp.safeMax);
   sparkline('temp',hist.temp,'#22c55e');
-  document.getElementById('mn-temp').textContent=m.temp.min+'°C';
-  document.getElementById('mx-temp').textContent=m.temp.max+'°C';
-  // Hum
+  document.getElementById('mn-temp').textContent=m.temp.min+'°C';document.getElementById('mx-temp').textContent=m.temp.max+'°C';
   const hS=getSt(sensor.hum,m.hum.safeMin,m.hum.safeMax);
   setCard('hum',hS,sensor.hum.toFixed(1)+' <span class="card-unit">%</span>',hS==='ok'?t.sNorm:hS==='warn'?t.sElev:t.sCrit);
-  setNdl('hum',sensor.hum,m.hum.min,m.hum.max,m.hum.safeMin,m.hum.safeMax);
-  sparkline('hum',hist.hum,'#3b82f6');
-  // Gas
+  setNdl('hum',sensor.hum,m.hum.min,m.hum.max,m.hum.safeMin,m.hum.safeMax);sparkline('hum',hist.hum,'#3b82f6');
   const gS=getSt(sensor.gas,m.gas.safeMin,m.gas.safeMax);
   setCard('gas',gS,Math.round(sensor.gas)+' <span class="card-unit">ADC</span>',gS==='ok'?t.sClean:gS==='warn'?t.sEGas:t.sTox);
-  setNdl('gas',sensor.gas,m.gas.min,m.gas.max,m.gas.safeMin,m.gas.safeMax);
-  sparkline('gas',hist.gas,'#f59e0b');
-  // Sound
+  setNdl('gas',sensor.gas,m.gas.min,m.gas.max,m.gas.safeMin,m.gas.safeMax);sparkline('gas',hist.gas,'#f59e0b');
   const ssT=sensor.sound===0?'ok':'warn';
   if(sensor.sound===1){sndCnt++;const sc=document.getElementById('sndCnt');if(sc)sc.textContent=sndCnt;}
   document.getElementById('val-snd').textContent=sensor.sound===0?t.vSil:t.vEvt;
   document.getElementById('val-snd').style.color=sensor.sound===0?'var(--text)':'#ef4444';
   document.getElementById('st-snd').className='card-st st-'+ssT;
   document.getElementById('st-snd').textContent=sensor.sound===0?t.sSil:t.sSnd;
-  // Banner
   const sts=[tS,hS,gS];let alts=[];
   if(tS!=='ok')alts.push(t.aTemp[tS==='alert'?1:0]);
   if(hS!=='ok')alts.push(t.aHum[hS==='alert'?1:0]);
   if(gS!=='ok')alts.push(t.aGas[gS==='alert'?1:0]);
   if(sensor.sound===1)alts.push(t.aSnd);
   const bn=document.getElementById('banner');
-  if(sts.includes('alert')){
-    bn.className='status-banner sb-alert';
-    document.getElementById('bannerTxt').textContent=t.stAlert+alts.join(' | ');
-    alts.forEach(a=>addLog(a,'alert'));
-    if(document.getElementById('autoChk').checked&&!buzActive)triggerBuzzer();
-  } else if(sts.includes('warn')||sensor.sound===1){
-    bn.className='status-banner sb-warn';
-    document.getElementById('bannerTxt').textContent=t.stWarn+alts.join(' | ');
-    if(Math.random()>.7)alts.forEach(a=>addLog(a,'warn'));
-    if(document.getElementById('autoChk').checked&&!buzActive&&sts.includes('warn'))triggerBuzzer();
-  } else {
-    bn.className='status-banner sb-ok';
-    document.getElementById('bannerTxt').textContent=t.allOk;
-    if(buzActive)stopBuzzer();
-  }
+  if(sts.includes('alert')){bn.className='status-banner sb-alert';document.getElementById('bannerTxt').textContent=t.stAlert+alts.join(' | ');alts.forEach(a=>addLog(a,'alert'));if(document.getElementById('autoChk').checked&&!buzActive)triggerBuzzer();}
+  else if(sts.includes('warn')||sensor.sound===1){bn.className='status-banner sb-warn';document.getElementById('bannerTxt').textContent=t.stWarn+alts.join(' | ');if(Math.random()>.7)alts.forEach(a=>addLog(a,'warn'));if(document.getElementById('autoChk').checked&&!buzActive&&sts.includes('warn'))triggerBuzzer();}
+  else{bn.className='status-banner sb-ok';document.getElementById('bannerTxt').textContent=t.allOk;if(buzActive)stopBuzzer();}
 }
 
-// ── MODE ──────────────────────────────────────
 function setMode(m){
-  mode=m;hist={temp:[],hum:[],gas:[]};
+  mode=m;hist={temp:[],hum:[],gas:[],stress:[]};
   document.getElementById('btnLS').classList.toggle('active',m==='livestock');
   document.getElementById('btnFS').classList.toggle('active',m==='fisheries');
   const ml=document.getElementById('modeTag');
@@ -593,11 +1043,19 @@ function clearLog(){
   sndCnt=0;const sc=document.getElementById('sndCnt');if(sc)sc.textContent='0';
 }
 
-// ── CLOCK ─────────────────────────────────────
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+const twin=new BarnTwin();
+twin.initHeatmap('heatmapCanvas','heatmapOverlay');
 setInterval(()=>document.getElementById('clock').textContent=new Date().toLocaleTimeString(),1000);
-
-// ── INIT ──────────────────────────────────────
 applyLang();renderSp();renderRef();update();setInterval(update,2500);
+setTimeout(()=>{
+  twin.renderHeatmap();
+  drawFloorplan('SAFE',sensor.temp,sensor.gas);
+  drawStressHistory(hist.stress);
+  updateFusionGauges(sensor.temp,sensor.gas,sensor.hum,0);
+},100);
 </script>
 </body>
 </html>
