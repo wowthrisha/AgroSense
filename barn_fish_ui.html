@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AgroSense — Livestock & Fisheries Monitor</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&family=Noto+Sans+Tamil:wght@400;600;800&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#0a0f0d;--surface:#111a15;--surface2:#162018;--border:#1f3328;--green:#22c55e;--teal:#14b8a6;--amber:#f59e0b;--red:#ef4444;--blue:#3b82f6;--text:#e2f0e7;--muted:#5a7a63;--mono:'Space Mono',monospace;--disp:'Syne',sans-serif;--tamil:'Noto Sans Tamil',sans-serif;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--disp);min-height:100vh;overflow-x:hidden}
+body.tamil{font-family:var(--tamil)}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(34,197,94,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(34,197,94,.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+.wrap{position:relative;z-index:1;max-width:1400px;margin:0 auto;padding:24px}
+
+header{display:flex;align-items:center;justify-content:space-between;padding:20px 28px;background:var(--surface);border:1px solid var(--border);border-radius:16px;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-icon{width:42px;height:42px;background:linear-gradient(135deg,var(--green),var(--teal));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.logo-text h1{font-size:1.3rem;font-weight:800;letter-spacing:-.02em}
+.logo-text span{font-size:.7rem;color:var(--muted);font-family:var(--mono);text-transform:uppercase;letter-spacing:.1em}
+.hdr-r{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.live-badge{display:flex;align-items:center;gap:6px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);padding:6px 14px;border-radius:100px;font-family:var(--mono);font-size:.7rem;color:var(--green);text-transform:uppercase;letter-spacing:.08em}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pdot 1.4s ease infinite}
+@keyframes pdot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+.clock{font-family:var(--mono);font-size:.75rem;color:var(--muted)}
+.lang-tog{display:flex;background:var(--surface2);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.lang-btn{padding:6px 16px;border:none;background:transparent;color:var(--muted);font-size:.78rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit}
+.lang-btn.active{background:var(--teal);color:#000}
+
+/* BUZZER */
+.buz-panel{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:22px 28px;margin-bottom:24px;display:flex;align-items:center;gap:28px;flex-wrap:wrap}
+.buz-vis{position:relative;flex-shrink:0;width:90px;height:90px;display:flex;align-items:center;justify-content:center}
+.buz-body{width:62px;height:62px;border-radius:50%;background:radial-gradient(circle at 36% 32%,#ff8080,#c0392b 55%,#7a1010);border:3px solid #8b1a1a;box-shadow:0 4px 20px rgba(239,68,68,.25),inset 0 -5px 10px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;font-size:26px;position:relative;z-index:2;transition:all .1s}
+.buz-body::after{content:'';position:absolute;top:12px;left:15px;width:10px;height:6px;background:rgba(255,255,255,.28);border-radius:50%;transform:rotate(-30deg)}
+.buz-ring{position:absolute;border-radius:50%;border:2px solid rgba(239,68,68,.4);top:50%;left:50%;transform:translate(-50%,-50%)}
+.buz-ring.r1{width:74px;height:74px}
+.buz-ring.r2{width:88px;height:88px;border-color:rgba(239,68,68,.2)}
+.buz-on .buz-body{box-shadow:0 0 0 5px rgba(239,68,68,.35),0 4px 30px rgba(239,68,68,.65),inset 0 -5px 10px rgba(0,0,0,.4);animation:bshk .08s ease infinite}
+.buz-on .buz-ring.r1{animation:rexp .55s ease-out infinite}
+.buz-on .buz-ring.r2{animation:rexp .55s ease-out .18s infinite}
+@keyframes bshk{0%,100%{transform:translate(0,0) rotate(0deg)}25%{transform:translate(-1px,1px) rotate(-1.5deg)}75%{transform:translate(1px,-1px) rotate(1.5deg)}}
+@keyframes rexp{0%{transform:translate(-50%,-50%) scale(1);opacity:.8}100%{transform:translate(-50%,-50%) scale(1.9);opacity:0}}
+.buz-ctrl{flex:1;min-width:220px}
+.buz-title{font-weight:800;font-size:1rem;margin-bottom:3px}
+.buz-sub{font-size:.7rem;color:var(--muted);font-family:var(--mono);margin-bottom:12px}
+.buz-state{font-size:.72rem;font-family:var(--mono);font-weight:700;padding:3px 10px;border-radius:4px;display:inline-block;margin-bottom:12px}
+.bs-off{background:rgba(90,122,99,.2);color:var(--muted)}
+.bs-on{background:rgba(239,68,68,.15);color:var(--red);animation:ftxt .5s ease infinite}
+@keyframes ftxt{0%,100%{opacity:1}50%{opacity:.45}}
+.vol-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.vol-lbl{font-size:.7rem;font-family:var(--mono);color:var(--muted);min-width:58px}
+input[type=range].vsl{flex:1;-webkit-appearance:none;height:6px;border-radius:3px;background:var(--surface2);outline:none;cursor:pointer}
+input[type=range].vsl::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--red);border:2px solid var(--bg);cursor:pointer;box-shadow:0 0 0 2px rgba(239,68,68,.4)}
+.vol-val{font-size:.7rem;font-family:var(--mono);color:var(--red);min-width:36px;text-align:right}
+.freq-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.freq-lbl{font-size:.68rem;font-family:var(--mono);color:var(--muted)}
+.freq-btn{padding:4px 10px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:.68rem;font-family:var(--mono);cursor:pointer;transition:all .2s}
+.freq-btn.act{background:rgba(239,68,68,.15);border-color:var(--red);color:var(--red)}
+.buz-btns{display:flex;gap:8px;flex-wrap:wrap}
+.bb{padding:7px 16px;border-radius:8px;border:none;cursor:pointer;font-size:.78rem;font-weight:700;font-family:var(--disp);transition:all .2s}
+.bb-trig{background:var(--red);color:#fff}
+.bb-trig:hover{background:#dc2626}
+.bb-stop{background:var(--surface2);color:var(--muted);border:1px solid var(--border)}
+.bb-stop:hover{color:var(--text)}
+.bb-test{background:rgba(245,158,11,.15);color:var(--amber);border:1px solid rgba(245,158,11,.3)}
+.bb-test:hover{background:rgba(245,158,11,.25)}
+.buz-meta{text-align:center;min-width:110px}
+.buz-meta-lbl{font-size:.65rem;font-family:var(--mono);color:var(--muted);margin-bottom:6px}
+.buz-count{font-size:2.2rem;font-weight:800;color:var(--red)}
+
+/* TOP BAR */
+.top-bar{display:flex;gap:10px;margin-bottom:24px;align-items:center;flex-wrap:wrap}
+.mode-btn{padding:8px 20px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:var(--disp);font-weight:600;font-size:.85rem;cursor:pointer;transition:all .2s}
+.mode-btn.active{background:var(--surface2);border-color:var(--green);color:var(--green)}
+.mode-btn:hover:not(.active){border-color:var(--muted);color:var(--text)}
+
+/* STATUS */
+.status-banner{padding:14px 22px;border-radius:12px;margin-bottom:24px;display:flex;align-items:center;gap:12px;font-weight:600;font-size:.9rem;transition:all .4s}
+.sb-ok{background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.25);color:var(--green)}
+.sb-warn{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);color:var(--amber)}
+.sb-alert{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.35);color:var(--red);animation:fbanner .8s ease infinite}
+@keyframes fbanner{0%,100%{opacity:1}50%{opacity:.65}}
+
+/* CARDS */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:18px;margin-bottom:24px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;position:relative;overflow:hidden;transition:border-color .3s,transform .2s}
+.card:hover{transform:translateY(-2px)}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:16px 16px 0 0;background:var(--cc,var(--green))}
+.card-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px}
+.card-lbl{font-size:.7rem;font-family:var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+.card-ico{font-size:1.4rem}
+.card-val{font-size:3rem;font-weight:800;line-height:1;margin-bottom:6px;font-variant-numeric:tabular-nums;transition:color .3s}
+.card-unit{font-size:1.2rem;font-weight:400;color:var(--muted)}
+.card-st{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:6px;font-size:.7rem;font-family:var(--mono);font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:16px}
+.st-ok{background:rgba(34,197,94,.12);color:var(--green)}
+.st-warn{background:rgba(245,158,11,.12);color:var(--amber)}
+.st-alert{background:rgba(239,68,68,.12);color:var(--red)}
+.range-sec{margin-top:14px}
+.range-lbl{font-size:.68rem;font-family:var(--mono);color:var(--muted);margin-bottom:6px;display:flex;justify-content:space-between}
+.range-trk{height:8px;border-radius:4px;background:var(--surface2);position:relative;overflow:visible}
+.range-safe{position:absolute;height:100%;border-radius:4px;background:linear-gradient(90deg,rgba(34,197,94,.2),rgba(34,197,94,.35));border:1px solid rgba(34,197,94,.4)}
+.range-ndl{position:absolute;top:50%;transform:translate(-50%,-50%);width:14px;height:14px;border-radius:50%;background:var(--cc,var(--green));border:2px solid var(--bg);box-shadow:0 0 0 2px var(--cc,var(--green));transition:left .5s cubic-bezier(.34,1.56,.64,1);z-index:2}
+.range-lim{display:flex;justify-content:space-between;font-size:.62rem;font-family:var(--mono);color:var(--muted);margin-top:4px}
+.spark-wrap{margin-top:14px}
+.spark-lbl{font-size:.62rem;font-family:var(--mono);color:var(--muted);margin-bottom:4px}
+canvas.spark{width:100%;height:48px;display:block}
+
+/* SPECIES */
+.sp-panel{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:0}
+.sp-card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px}
+.sp-name{font-weight:700;font-size:.9rem;margin-bottom:3px}
+.sp-type{font-size:.65rem;font-family:var(--mono);color:var(--muted);text-transform:uppercase;margin-bottom:12px}
+.sp-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--border)}
+.sp-row:last-child{border:none}
+.sp-param{font-size:.72rem;color:var(--muted)}
+.sp-range{font-size:.72rem;font-family:var(--mono);color:var(--green)}
+
+/* REF */
+.ref-sec{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:24px}
+.ref-title{font-weight:800;font-size:1rem;margin-bottom:16px}
+table{width:100%;border-collapse:collapse;font-size:.8rem}
+th{font-family:var(--mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:8px 12px;text-align:left;border-bottom:1px solid var(--border)}
+td{padding:10px 12px;border-bottom:1px solid rgba(31,51,40,.5)}
+tr:last-child td{border:none}
+.td-ok{color:var(--green);font-family:var(--mono)}
+.td-red{color:var(--red);font-family:var(--mono);font-size:.75rem}
+.td-src{font-size:.65rem;color:var(--muted)}
+
+/* LOG */
+.log-sec{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px}
+.log-title{font-weight:800;font-size:1rem;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
+.log-clr{font-size:.7rem;font-family:var(--mono);color:var(--muted);cursor:pointer}
+.log-clr:hover{color:var(--red)}
+.log-entry{padding:10px 14px;border-radius:8px;background:var(--surface2);margin-bottom:8px;display:flex;align-items:center;gap:10px;font-size:.78rem;animation:slin .3s ease}
+@keyframes slin{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
+.log-time{font-family:var(--mono);font-size:.65rem;color:var(--muted);min-width:60px}
+.log-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.log-empty{color:var(--muted);font-size:.8rem;font-family:var(--mono)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">🌿</div>
+    <div class="logo-text">
+      <h1 id="appTitle">AgroSense</h1>
+      <span id="appSub">Livestock &amp; Fisheries IoT Monitor</span>
+    </div>
+  </div>
+  <div class="hdr-r">
+    <div class="lang-tog">
+      <button class="lang-btn active" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" onclick="setLang('ta')" style="font-family:var(--tamil)">தமிழ்</button>
+    </div>
+    <div class="live-badge"><div class="live-dot"></div><span id="liveTxt">Live</span></div>
+    <div class="clock" id="clock">--:--:--</div>
+  </div>
+</header>
+
+<!-- BUZZER PANEL -->
+<div class="buz-panel">
+  <div class="buz-vis" id="buzVis">
+    <div class="buz-ring r1"></div>
+    <div class="buz-ring r2"></div>
+    <div class="buz-body">🔔</div>
+  </div>
+  <div class="buz-ctrl">
+    <div class="buz-title" id="buzTitle">Buzzer Simulation</div>
+    <div class="buz-sub" id="buzSub">Hardware alert simulation — replaces physical buzzer on ESP32</div>
+    <div class="buz-state bs-off" id="buzState">■ OFF</div>
+    <div class="vol-row">
+      <span class="vol-lbl" id="volLbl">Volume</span>
+      <input type="range" class="vsl" id="volSlider" min="0" max="1" step="0.05" value="0.6" oninput="document.getElementById('volVal').textContent=Math.round(this.value*100)+'%'"/>
+      <span class="vol-val" id="volVal">60%</span>
+    </div>
+    <div class="freq-row">
+      <span class="freq-lbl" id="freqLbl">Tone:</span>
+      <button class="freq-btn act" id="f1" onclick="setFreq(880,'short')">Short Beep</button>
+      <button class="freq-btn" id="f2" onclick="setFreq(1200,'long')">Long Tone</button>
+      <button class="freq-btn" id="f3" onclick="setFreq(600,'pulse')">Pulse</button>
+      <button class="freq-btn" id="f4" onclick="setFreq(1500,'siren')">Siren</button>
+    </div>
+    <div class="buz-btns">
+      <button class="bb bb-trig" id="btnTrig" onclick="triggerBuzzer()">🚨 Trigger Alert</button>
+      <button class="bb bb-stop" id="btnStop" onclick="stopBuzzer()">■ Stop</button>
+      <button class="bb bb-test" id="btnTest" onclick="testBuzzer()">▶ Test Beep</button>
+    </div>
+  </div>
+  <div class="buz-meta">
+    <div class="buz-meta-lbl" id="autoLbl">AUTO-TRIGGER</div>
+    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;justify-content:center;margin-bottom:4px">
+      <input type="checkbox" id="autoChk" checked style="width:16px;height:16px;accent-color:var(--red)"/>
+      <span style="font-size:.78rem" id="autoTxt">On alert</span>
+    </label>
+    <div class="buz-meta-lbl" id="buzCntLbl" style="margin-top:12px">TRIGGERS</div>
+    <div class="buz-count" id="buzCnt">0</div>
+  </div>
+</div>
+
+<!-- MODE BAR -->
+<div class="top-bar">
+  <button class="mode-btn active" id="btnLS" onclick="setMode('livestock')">🐄 <span id="mLS">Livestock</span></button>
+  <button class="mode-btn" id="btnFS" onclick="setMode('fisheries')">🐟 <span id="mFS">Fisheries</span></button>
+</div>
+
+<!-- STATUS -->
+<div class="status-banner sb-ok" id="banner">
+  <span>●</span><span id="bannerTxt">All parameters within safe range — System Normal</span>
+</div>
+
+<!-- CARDS -->
+<div class="cards">
+  <!-- Temp -->
+  <div class="card" id="card-temp" style="--cc:#22c55e">
+    <div class="card-hdr"><div><div class="card-lbl" id="lTemp">Temperature</div></div><div class="card-ico">🌡️</div></div>
+    <div class="card-val" id="val-temp">30.5 <span class="card-unit">°C</span></div>
+    <div class="card-st st-ok" id="st-temp">● Normal</div>
+    <div class="range-sec">
+      <div class="range-lbl"><span id="rMin">Min</span><span id="lSafe">Safe Range</span><span id="rMax">Max</span></div>
+      <div class="range-trk" id="trk-temp"><div class="range-safe" id="safe-temp"></div><div class="range-ndl" id="ndl-temp"></div></div>
+      <div class="range-lim"><span id="mn-temp">0°C</span><span id="mx-temp">50°C</span></div>
+    </div>
+    <div class="spark-wrap"><div class="spark-lbl" id="lHist">History (last 20 readings)</div><canvas class="spark" id="sp-temp" width="300" height="48"></canvas></div>
+  </div>
+  <!-- Hum -->
+  <div class="card" id="card-hum" style="--cc:#3b82f6">
+    <div class="card-hdr"><div><div class="card-lbl" id="lHum">Humidity</div></div><div class="card-ico">💧</div></div>
+    <div class="card-val" id="val-hum">52.0 <span class="card-unit">%</span></div>
+    <div class="card-st st-ok" id="st-hum">● Normal</div>
+    <div class="range-sec">
+      <div class="range-lbl"><span>Min</span><span id="lSafe2">Safe Range</span><span>Max</span></div>
+      <div class="range-trk" id="trk-hum"><div class="range-safe" id="safe-hum"></div><div class="range-ndl" id="ndl-hum" style="background:var(--blue);box-shadow:0 0 0 2px var(--blue)"></div></div>
+      <div class="range-lim"><span id="mn-hum">0%</span><span id="mx-hum">100%</span></div>
+    </div>
+    <div class="spark-wrap"><div class="spark-lbl" id="lHist2">History (last 20 readings)</div><canvas class="spark" id="sp-hum" width="300" height="48"></canvas></div>
+  </div>
+  <!-- Gas -->
+  <div class="card" id="card-gas" style="--cc:#f59e0b">
+    <div class="card-hdr"><div><div class="card-lbl" id="lGas">Gas / Air Quality (MQ-135)</div></div><div class="card-ico">💨</div></div>
+    <div class="card-val" id="val-gas">48 <span class="card-unit">ADC</span></div>
+    <div class="card-st st-ok" id="st-gas">● Normal</div>
+    <div class="range-sec">
+      <div class="range-lbl"><span>Min</span><span id="lZone">Safe Zone</span><span id="lAlrt">Alert</span></div>
+      <div class="range-trk" id="trk-gas"><div class="range-safe" id="safe-gas"></div><div class="range-ndl" id="ndl-gas" style="background:var(--amber);box-shadow:0 0 0 2px var(--amber)"></div></div>
+      <div class="range-lim"><span>0</span><span id="mx-gas">4095</span></div>
+    </div>
+    <div class="spark-wrap"><div class="spark-lbl" id="lHist3">History (last 20 readings)</div><canvas class="spark" id="sp-gas" width="300" height="48"></canvas></div>
+  </div>
+  <!-- Sound -->
+  <div class="card" id="card-snd" style="--cc:#a855f7">
+    <div class="card-hdr"><div><div class="card-lbl" id="lSnd">Sound Detection (Digital)</div></div><div class="card-ico">🔊</div></div>
+    <div class="card-val" id="val-snd" style="font-size:2rem;padding-top:6px">HIGH</div>
+    <div class="card-st st-warn" id="st-snd">⚠ Sound Detected</div>
+    <div style="margin-top:14px;font-size:.72rem;color:var(--muted);font-family:var(--mono);line-height:1.9" id="sndInfo">
+      Digital: <span style="color:var(--text)">0 = Silent</span> / <span style="color:var(--red)">1 = Sound Event</span><br>
+      Threshold: <span style="color:var(--text)">≥85 dB indicates stress</span><br>
+      Session alerts: <span id="sndCnt" style="color:var(--amber)">0</span>
+    </div>
+  </div>
+</div>
+
+<!-- SPECIES -->
+<div class="ref-sec" id="spSec">
+  <div class="ref-title">📋 <span id="spTitle">Species-Specific Safe Parameter Ranges</span> <span style="font-size:.7rem;font-weight:400;color:var(--muted);font-family:var(--mono)" id="modeTag">— LIVESTOCK MODE</span></div>
+  <div class="sp-panel" id="spPanel"></div>
+</div>
+
+<!-- REF TABLE -->
+<div class="ref-sec">
+  <div class="ref-title" id="refTitle">📚 Scientific Basis — Parameter Thresholds &amp; Sources</div>
+  <table>
+    <thead><tr>
+      <th id="thP">Parameter</th><th id="thM">Current Mode</th>
+      <th id="thS">Safe Range</th><th id="thA">Alert Threshold</th><th id="thSr">Standard / Source</th>
+    </tr></thead>
+    <tbody id="refTbody"></tbody>
+  </table>
+</div>
+
+<!-- LOG -->
+<div class="log-sec">
+  <div class="log-title">
+    <span id="logTitle">🚨 Alert Log</span>
+    <span class="log-clr" id="logClr" onclick="clearLog()">Clear</span>
+  </div>
+  <div id="logCont"><div class="log-empty" id="logEmpty">No alerts — system running normally.</div></div>
+</div>
+
+</div><!-- /wrap -->
+<script>
+// ── TRANSLATIONS ──────────────────────────────
+const T={
+  en:{
+    appTitle:'AgroSense',appSub:'Livestock & Fisheries IoT Monitor',live:'Live',
+    mLS:'Livestock',mFS:'Fisheries',
+    buzTitle:'Buzzer Simulation',buzSub:'Hardware alert simulation — replaces physical buzzer on ESP32',
+    volLbl:'Volume',freqLbl:'Tone:',autoLbl:'AUTO-TRIGGER',autoTxt:'On alert',buzCntLbl:'TRIGGERS',
+    btnTrig:'🚨 Trigger Alert',btnStop:'■ Stop',btnTest:'▶ Test Beep',
+    f1:'Short Beep',f2:'Long Tone',f3:'Pulse',f4:'Siren',
+    buzOff:'■ OFF',buzOn:'■ BUZZING',
+    mLS_tag:'— LIVESTOCK MODE',mFS_tag:'— FISHERIES MODE',
+    allOk:'✓ All parameters within safe range — System Normal',
+    stAlert:'🚨 ALERT: ',stWarn:'⚠ Warning: ',
+    lTemp:'Temperature',lHum:'Humidity',lGas:'Gas / Air Quality (MQ-135)',lSnd:'Sound Detection (Digital)',
+    lSafe:'Safe Range',lZone:'Safe Zone',lAlrt:'Alert',rMin:'Min',rMax:'Max',
+    lHist:'History (last 20 readings)',
+    sNorm:'Normal',sNear:'Near Limit',sCrit:'CRITICAL',
+    sElev:'Elevated',sClean:'Clean Air',sEGas:'Elevated Gas',sTox:'TOXIC LEVEL',
+    sSil:'● Silent — OK',sSnd:'⚠ Sound Detected',vSil:'SILENT',vEvt:'EVENT!',
+    sndInfo:'Digital: <span style="color:var(--text)">0 = Silent</span> / <span style="color:var(--red)">1 = Sound Event</span><br>Threshold: <span style="color:var(--text)">≥85 dB indicates stress</span><br>Session alerts: ',
+    spTitle:'Species-Specific Safe Parameter Ranges',
+    refTitle:'📚 Scientific Basis — Parameter Thresholds & Sources',
+    thP:'Parameter',thM:'Current Mode',thS:'Safe Range',thA:'Alert Threshold',thSr:'Standard / Source',
+    logTitle:'🚨 Alert Log',logClr:'Clear',logEmpty:'No alerts — system running normally.',
+    aTemp:['Temperature near limit','Temperature CRITICAL'],
+    aHum:['Humidity near limit','Humidity CRITICAL'],
+    aGas:['Gas elevated','Gas CRITICAL'],
+    aSnd:'Sound event',
+  },
+  ta:{
+    appTitle:'அக்ரோசென்ஸ்',appSub:'கால்நடை & மீன்வளர்ப்பு IoT கண்காணிப்பு',live:'நேரலை',
+    mLS:'கால்நடை',mFS:'மீன்வளர்ப்பு',
+    buzTitle:'பஸர் உருவகம்',buzSub:'வன்பொருள் எச்சரிக்கை உருவகம் — ESP32 இயற்பியல் பஸரை மாற்றுகிறது',
+    volLbl:'ஒலியளவு',freqLbl:'தொனி:',autoLbl:'தானியங்கி',autoTxt:'எச்சரிக்கையில்',buzCntLbl:'முறைகள்',
+    btnTrig:'🚨 எச்சரிக்கை',btnStop:'■ நிறுத்து',btnTest:'▶ சோதனை',
+    f1:'குறு ஒலி',f2:'நீண்ட தொனி',f3:'துடிப்பு',f4:'சைரன்',
+    buzOff:'■ அணைவு',buzOn:'■ ஒலிக்கிறது',
+    mLS_tag:'— கால்நடை பயன்முறை',mFS_tag:'— மீன்வளர்ப்பு பயன்முறை',
+    allOk:'✓ அனைத்து அளவுருக்களும் பாதுகாப்பான வரம்பிற்குள் — இயல்பு நிலை',
+    stAlert:'🚨 எச்சரிக்கை: ',stWarn:'⚠ எச்சரிப்பு: ',
+    lTemp:'வெப்பநிலை',lHum:'ஈரப்பதம்',lGas:'வாயு / காற்று தரம் (MQ-135)',lSnd:'ஒலி கண்டறிதல் (டிஜிட்டல்)',
+    lSafe:'பாதுகாப்பு வரம்பு',lZone:'பாதுகாப்பு மண்டலம்',lAlrt:'எச்சரிக்கை',rMin:'குறைந்தபட்சம்',rMax:'அதிகபட்சம்',
+    lHist:'வரலாறு (கடைசி 20 அளவீடுகள்)',
+    sNorm:'இயல்பு',sNear:'வரம்பில்',sCrit:'அவசரம்',
+    sElev:'உயர்வு',sClean:'தூய காற்று',sEGas:'வாயு உயர்வு',sTox:'நச்சு நிலை',
+    sSil:'● அமைதி — சரி',sSnd:'⚠ ஒலி கண்டறியப்பட்டது',vSil:'அமைதி',vEvt:'ஒலி!',
+    sndInfo:'டிஜிட்டல்: <span style="color:var(--text)">0 = அமைதி</span> / <span style="color:var(--red)">1 = ஒலி நிகழ்வு</span><br>வரம்பு: <span style="color:var(--text)">≥85 dB மன அழுத்தம்</span><br>அமர்வு எச்சரிக்கைகள்: ',
+    spTitle:'இனம்-குறிப்பிட்ட பாதுகாப்பு அளவுரு வரம்புகள்',
+    refTitle:'📚 அறிவியல் அடிப்படை — அளவுரு வரம்புகள் & ஆதாரங்கள்',
+    thP:'அளவுரு',thM:'தற்போதைய பயன்முறை',thS:'பாதுகாப்பு வரம்பு',thA:'எச்சரிக்கை வரம்பு',thSr:'தரநிலை / ஆதாரம்',
+    logTitle:'🚨 எச்சரிக்கை பதிவு',logClr:'அழி',logEmpty:'எச்சரிக்கை இல்லை — கணினி இயல்பாக இயங்குகிறது.',
+    aTemp:['வெப்பநிலை வரம்பு அருகில்','வெப்பநிலை அவசரம்'],
+    aHum:['ஈரப்பதம் உயர்வு','ஈரப்பதம் அவசரம்'],
+    aGas:['வாயு அளவு உயர்ந்தது','வாயு அவசரம்'],
+    aSnd:'ஒலி நிகழ்வு',
+  }
+};
+
+// ── MODES ─────────────────────────────────────
+const MODES={
+  livestock:{
+    temp:{min:0,max:45,safeMin:10,safeMax:32},
+    hum:{min:0,max:100,safeMin:50,safeMax:80},
+    gas:{min:0,max:4095,safeMin:0,safeMax:800},
+    sp:{
+      en:[
+        {n:'Cattle',t:'Livestock',r:[['Temp THI comfort','< 72 THI (≈10–26°C)'],['Humidity','50–80%'],['NH₃ (Ammonia)','< 25 ppm'],['CO₂','< 3000 ppm'],['Noise stress','< 85 dB']]},
+        {n:'Goat / Sheep',t:'Livestock',r:[['Temperature','18–30°C'],['Humidity','55–75%'],['NH₃','< 20 ppm'],['Noise stress','< 80 dB']]},
+        {n:'Swine / Pig',t:'Livestock',r:[['Temperature','16–26°C'],['Humidity','50–70%'],['NH₃','< 10 ppm (EU)'],['CO₂','< 3000 ppm']]},
+      ],
+      ta:[
+        {n:'மாடு',t:'கால்நடை',r:[['வெப்பநிலை THI','< 72 THI (≈10–26°C)'],['ஈரப்பதம்','50–80%'],['NH₃ (அம்மோனியா)','< 25 ppm'],['CO₂','< 3000 ppm'],['ஒலி மன அழுத்தம்','< 85 dB']]},
+        {n:'ஆடு / செம்மறி',t:'கால்நடை',r:[['வெப்பநிலை','18–30°C'],['ஈரப்பதம்','55–75%'],['NH₃','< 20 ppm'],['ஒலி','< 80 dB']]},
+        {n:'பன்றி',t:'கால்நடை',r:[['வெப்பநிலை','16–26°C'],['ஈரப்பதம்','50–70%'],['NH₃','< 10 ppm'],['CO₂','< 3000 ppm']]},
+      ]
+    },
+    ref:{
+      en:[['Temperature','Cattle / Goat','10–32°C','> 35°C','FAO Livestock & Climate; ASHRAE 241'],['Humidity','Cattle Barn','50–80% RH','> 85% RH','MWPS-32 Livestock Housing'],['Gas (MQ-135)','Barn NH₃/CO₂ proxy','0–800 ADC','> 1500 ADC','OSHA PEL: NH₃ 25ppm; EU Dir. 2008/120/EC'],['Sound','Stress detection','0 (silent)','1 (> 85 dB)','OIE Animal Welfare Art. 7.1']],
+      ta:[['வெப்பநிலை','மாடு / ஆடு','10–32°C','> 35°C','FAO கால்நடை & காலநிலை; ASHRAE 241'],['ஈரப்பதம்','மாட்டுத் தொழுவம்','50–80% RH','> 85% RH','MWPS-32 கால்நடை வீட்டுவசதி'],['வாயு (MQ-135)','NH₃/CO₂ பிரதிநிதி','0–800 ADC','> 1500 ADC','OSHA PEL: NH₃ 25ppm; EU Dir. 2008/120/EC'],['ஒலி','மன அழுத்த கண்டறிதல்','0 (அமைதி)','1 (> 85 dB)','OIE விலங்கு நலம் Art. 7.1']],
+    }
+  },
+  fisheries:{
+    temp:{min:0,max:45,safeMin:22,safeMax:30},
+    hum:{min:0,max:100,safeMin:60,safeMax:95},
+    gas:{min:0,max:4095,safeMin:0,safeMax:400},
+    sp:{
+      en:[
+        {n:'Tilapia',t:'Freshwater Fish',r:[['Water Temp','25–30°C (optimal 28°C)'],['DO (Dissolved O₂)','> 5 mg/L'],['NH₃','< 0.02 mg/L'],['pH','6.5–8.5']]},
+        {n:'Catfish / Pangasius',t:'Freshwater Fish',r:[['Water Temp','26–30°C'],['DO','> 4 mg/L'],['NH₃','< 0.05 mg/L'],['pH','6.5–8.0']]},
+        {n:'Shrimp (Vannamei)',t:'Marine / Brackish',r:[['Water Temp','23–30°C'],['Salinity','15–25 ppt'],['DO','> 5 mg/L'],['NH₃','< 0.1 mg/L']]},
+      ],
+      ta:[
+        {n:'திலாப்பியா',t:'நன்னீர் மீன்',r:[['நீர் வெப்பநிலை','25–30°C (சிறந்தது 28°C)'],['DO (கரைந்த O₂)','> 5 mg/L'],['NH₃','< 0.02 mg/L'],['pH','6.5–8.5']]},
+        {n:'கெளுத்தி / பங்காசியஸ்',t:'நன்னீர் மீன்',r:[['நீர் வெப்பநிலை','26–30°C'],['DO','> 4 mg/L'],['NH₃','< 0.05 mg/L'],['pH','6.5–8.0']]},
+        {n:'இறால் (வன்னாமி)',t:'கடல் / நலிவு நீர்',r:[['நீர் வெப்பநிலை','23–30°C'],['உப்புத்தன்மை','15–25 ppt'],['DO','> 5 mg/L'],['NH₃','< 0.1 mg/L']]},
+      ]
+    },
+    ref:{
+      en:[['Temperature','Fish hatchery shed','22–32°C','> 38°C','FAO Aquaculture Engineering; WorldFish Center'],['Humidity','Indoor aquaculture','60–95% RH','< 40% or > 95%','FAO Technical Paper 408'],['Gas (MQ-135)','H₂S / NH₃ pond proxy','0–400 ADC','> 800 ADC','WHO Aquatic Env.; NACA Tech Reports'],['Sound','Stress minimization','0 (silent)','1 (shock/impact)','FAO Code of Conduct Art. 9.1.3']],
+      ta:[['வெப்பநிலை','மீன் குஞ்சு பொரிப்பகம்','22–32°C','> 38°C','FAO நீர்வள பொறியியல்; WorldFish'],['ஈரப்பதம்','உள்புற நீர்வளர்ப்பு','60–95% RH','< 40% or > 95%','FAO தொழில்நுட்ப ஆவணம் 408'],['வாயு (MQ-135)','H₂S / NH₃ குளம் பிரதிநிதி','0–400 ADC','> 800 ADC','WHO நீர்சூழல்; NACA அறிக்கைகள்'],['ஒலி','மன அழுத்த குறைப்பு','0 (அமைதி)','1 (அதிர்வு)','FAO நடத்தை நெறிமுறை Art. 9.1.3']],
+    }
+  }
+};
+
+// ── STATE ─────────────────────────────────────
+let lang='en', mode='livestock';
+let hist={temp:[],hum:[],gas:[]};
+let sndCnt=0, buzCntVal=0;
+let sensor={temp:30.5,hum:52,gas:48,sound:1};
+let audioCtx=null, buzIv=null, buzActive=false;
+let buzFreq=880, buzPat='short';
+
+// ── AUDIO ─────────────────────────────────────
+function getCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;}
+function beep(f,dur,vol){
+  try{const c=getCtx();const o=c.createOscillator();const g=c.createGain();
+  o.connect(g);g.connect(c.destination);o.type='square';o.frequency.value=f;
+  g.gain.setValueAtTime(vol*.3,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+dur);
+  o.start(c.currentTime);o.stop(c.currentTime+dur);}catch(e){}}
+function playPat(pat,f,v){
+  if(pat==='short'){beep(f,.15,v);}
+  else if(pat==='long'){beep(f,.6,v);}
+  else if(pat==='pulse'){beep(f,.08,v);setTimeout(()=>beep(f,.08,v),160);setTimeout(()=>beep(f,.08,v),320);}
+  else if(pat==='siren'){beep(f,.25,v);setTimeout(()=>beep(f*.75,.25,v),290);}
+}
+function triggerBuzzer(){
+  if(buzActive)return;
+  buzActive=true;buzCntVal++;
+  document.getElementById('buzCnt').textContent=buzCntVal;
+  document.getElementById('buzVis').classList.add('buz-on');
+  const t=T[lang];
+  document.getElementById('buzState').className='buz-state bs-on';
+  document.getElementById('buzState').textContent=t.buzOn;
+  const v=parseFloat(document.getElementById('volSlider').value);
+  playPat(buzPat,buzFreq,v);
+  const delay=buzPat==='pulse'?650:buzPat==='siren'?720:850;
+  buzIv=setInterval(()=>{if(!buzActive){clearInterval(buzIv);return;}playPat(buzPat,buzFreq,v);},delay);
+}
+function stopBuzzer(){
+  buzActive=false;clearInterval(buzIv);
+  document.getElementById('buzVis').classList.remove('buz-on');
+  const t=T[lang];
+  document.getElementById('buzState').className='buz-state bs-off';
+  document.getElementById('buzState').textContent=t.buzOff;
+}
+function testBuzzer(){const v=parseFloat(document.getElementById('volSlider').value);playPat(buzPat,buzFreq,v);}
+function setFreq(f,pat){
+  buzFreq=f;buzPat=pat;
+  document.querySelectorAll('.freq-btn').forEach(b=>b.classList.remove('act'));
+  const m={short:'f1',long:'f2',pulse:'f3',siren:'f4'};
+  document.getElementById(m[pat]).classList.add('act');
+  if(buzActive){stopBuzzer();setTimeout(triggerBuzzer,100);}
+}
+
+// ── LANGUAGE ─────────────────────────────────
+function setLang(l){
+  lang=l;
+  document.body.classList.toggle('tamil',l==='ta');
+  document.querySelectorAll('.lang-btn').forEach((b,i)=>b.classList.toggle('active',['en','ta'][i]===l));
+  applyLang();renderSp();renderRef();
+}
+function applyLang(){
+  const t=T[lang];
+  const s=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  const h=(id,v)=>{const e=document.getElementById(id);if(e)e.innerHTML=v;};
+  s('appTitle',t.appTitle);s('appSub',t.appSub);s('liveTxt',t.live);
+  s('mLS',t.mLS);s('mFS',t.mFS);
+  s('buzTitle',t.buzTitle);s('buzSub',t.buzSub);
+  s('volLbl',t.volLbl);s('freqLbl',t.freqLbl);
+  s('autoLbl',t.autoLbl);s('autoTxt',t.autoTxt);s('buzCntLbl',t.buzCntLbl);
+  h('btnTrig',t.btnTrig);s('btnStop',t.btnStop);s('btnTest',t.btnTest);
+  s('f1',t.f1);s('f2',t.f2);s('f3',t.f3);s('f4',t.f4);
+  s('buzState',buzActive?t.buzOn:t.buzOff);
+  s('lTemp',t.lTemp);s('lHum',t.lHum);s('lGas',t.lGas);s('lSnd',t.lSnd);
+  s('lSafe',t.lSafe);s('lSafe2',t.lSafe);s('lZone',t.lZone);s('lAlrt',t.lAlrt);
+  s('rMin',t.rMin);s('rMax',t.rMax);
+  s('lHist',t.lHist);s('lHist2',t.lHist);s('lHist3',t.lHist);
+  s('modeTag','— '+(lang==='en'?MODES[mode]['mLS_tag']||'LIVESTOCK MODE':T.ta.mLS_tag));
+  // mode tag based on current mode
+  const ml=document.getElementById('modeTag');
+  if(ml)ml.textContent='— '+(lang==='en'?(mode==='livestock'?'LIVESTOCK MODE':'FISHERIES MODE'):(mode==='livestock'?'கால்நடை பயன்முறை':'மீன்வளர்ப்பு பயன்முறை'));
+  s('spTitle',t.spTitle);s('refTitle',t.refTitle);
+  s('thP',t.thP);s('thM',t.thM);s('thS',t.thS);s('thA',t.thA);s('thSr',t.thSr);
+  s('logTitle',t.logTitle);s('logClr',t.logClr);
+  // sound info
+  const sc=document.getElementById('sndCnt');const cnt=sc?sc.textContent:'0';
+  h('sndInfo',t.sndInfo+'<span id="sndCnt" style="color:var(--amber)">'+cnt+'</span>');
+}
+
+// ── SIMULATION ────────────────────────────────
+function simTick(){
+  sensor.temp=Math.max(15,Math.min(42,sensor.temp+(Math.random()-.48)*.5));
+  sensor.hum=Math.max(30,Math.min(95,sensor.hum+(Math.random()-.5)*1.2));
+  sensor.gas=Math.max(0,Math.min(4095,sensor.gas+(Math.random()-.45)*8));
+  sensor.sound=Math.random()>.7?1:0;
+}
+function getSt(v,mn,mx){const m=(mx-mn)*.1;if(v>=mn&&v<=mx)return'ok';if(v<mn-m||v>mx+m)return'alert';return'warn';}
+function setNdl(id,v,mn,mx,smn,smx){
+  const pct=x=>Math.max(0,Math.min(100,((x-mn)/(mx-mn))*100));
+  document.getElementById('safe-'+id).style.cssText='left:'+pct(smn)+'%;width:'+(pct(smx)-pct(smn))+'%';
+  document.getElementById('ndl-'+id).style.left=pct(v)+'%';
+}
+function setCard(id,st,vhtml,stxt){
+  const cols={ok:'#22c55e',warn:'#f59e0b',alert:'#ef4444'};
+  const ve=document.getElementById('val-'+id);if(!ve)return;
+  ve.innerHTML=vhtml;ve.style.color=st==='ok'?'var(--text)':cols[st];
+  const se=document.getElementById('st-'+id);if(!se)return;
+  se.className='card-st st-'+st;
+  se.textContent=(st==='ok'?'● ':st==='warn'?'⚠ ':'🚨 ')+stxt;
+  const ce=document.getElementById('card-'+id);if(ce)ce.style.setProperty('--cc',cols[st]);
+}
+function sparkline(id,data,color){
+  const c=document.getElementById('sp-'+id);if(!c||data.length<2)return;
+  const ctx=c.getContext('2d');const W=c.width,H=c.height;
+  ctx.clearRect(0,0,W,H);
+  const mn=Math.min(...data),mx=Math.max(...data),r=mx-mn||1;
+  const x=i=>(i/(data.length-1))*W;const y=v=>H-((v-mn)/r)*(H-8)-4;
+  ctx.beginPath();ctx.moveTo(x(0),H);data.forEach((v,i)=>ctx.lineTo(x(i),y(v)));ctx.lineTo(x(data.length-1),H);ctx.closePath();ctx.fillStyle=color+'22';ctx.fill();
+  ctx.beginPath();data.forEach((v,i)=>i===0?ctx.moveTo(x(i),y(v)):ctx.lineTo(x(i),y(v)));ctx.strokeStyle=color;ctx.lineWidth=2;ctx.stroke();
+}
+function addLog(msg,type){
+  const el=document.getElementById('logEmpty');if(el)el.style.display='none';
+  const d=new Date();const tm=[d.getHours(),d.getMinutes(),d.getSeconds()].map(n=>String(n).padStart(2,'0')).join(':');
+  const cols={ok:'#22c55e',warn:'#f59e0b',alert:'#ef4444'};
+  const e=document.createElement('div');e.className='log-entry';
+  e.innerHTML='<span class="log-time">'+tm+'</span><span class="log-dot" style="background:'+cols[type]+'"></span><span>'+msg+'</span>';
+  const c=document.getElementById('logCont');c.insertBefore(e,c.firstChild);
+  if(c.children.length>20)c.removeChild(c.lastChild);
+}
+function update(){
+  simTick();const m=MODES[mode];const t=T[lang];
+  ['temp','hum','gas'].forEach(k=>{hist[k].push(sensor[k]);if(hist[k].length>20)hist[k].shift();});
+  // Temp
+  const tS=getSt(sensor.temp,m.temp.safeMin,m.temp.safeMax);
+  setCard('temp',tS,sensor.temp.toFixed(1)+' <span class="card-unit">°C</span>',tS==='ok'?t.sNorm:tS==='warn'?t.sNear:t.sCrit);
+  setNdl('temp',sensor.temp,m.temp.min,m.temp.max,m.temp.safeMin,m.temp.safeMax);
+  sparkline('temp',hist.temp,'#22c55e');
+  document.getElementById('mn-temp').textContent=m.temp.min+'°C';
+  document.getElementById('mx-temp').textContent=m.temp.max+'°C';
+  // Hum
+  const hS=getSt(sensor.hum,m.hum.safeMin,m.hum.safeMax);
+  setCard('hum',hS,sensor.hum.toFixed(1)+' <span class="card-unit">%</span>',hS==='ok'?t.sNorm:hS==='warn'?t.sElev:t.sCrit);
+  setNdl('hum',sensor.hum,m.hum.min,m.hum.max,m.hum.safeMin,m.hum.safeMax);
+  sparkline('hum',hist.hum,'#3b82f6');
+  // Gas
+  const gS=getSt(sensor.gas,m.gas.safeMin,m.gas.safeMax);
+  setCard('gas',gS,Math.round(sensor.gas)+' <span class="card-unit">ADC</span>',gS==='ok'?t.sClean:gS==='warn'?t.sEGas:t.sTox);
+  setNdl('gas',sensor.gas,m.gas.min,m.gas.max,m.gas.safeMin,m.gas.safeMax);
+  sparkline('gas',hist.gas,'#f59e0b');
+  // Sound
+  const ssT=sensor.sound===0?'ok':'warn';
+  if(sensor.sound===1){sndCnt++;const sc=document.getElementById('sndCnt');if(sc)sc.textContent=sndCnt;}
+  document.getElementById('val-snd').textContent=sensor.sound===0?t.vSil:t.vEvt;
+  document.getElementById('val-snd').style.color=sensor.sound===0?'var(--text)':'#ef4444';
+  document.getElementById('st-snd').className='card-st st-'+ssT;
+  document.getElementById('st-snd').textContent=sensor.sound===0?t.sSil:t.sSnd;
+  // Banner
+  const sts=[tS,hS,gS];let alts=[];
+  if(tS!=='ok')alts.push(t.aTemp[tS==='alert'?1:0]);
+  if(hS!=='ok')alts.push(t.aHum[hS==='alert'?1:0]);
+  if(gS!=='ok')alts.push(t.aGas[gS==='alert'?1:0]);
+  if(sensor.sound===1)alts.push(t.aSnd);
+  const bn=document.getElementById('banner');
+  if(sts.includes('alert')){
+    bn.className='status-banner sb-alert';
+    document.getElementById('bannerTxt').textContent=t.stAlert+alts.join(' | ');
+    alts.forEach(a=>addLog(a,'alert'));
+    if(document.getElementById('autoChk').checked&&!buzActive)triggerBuzzer();
+  } else if(sts.includes('warn')||sensor.sound===1){
+    bn.className='status-banner sb-warn';
+    document.getElementById('bannerTxt').textContent=t.stWarn+alts.join(' | ');
+    if(Math.random()>.7)alts.forEach(a=>addLog(a,'warn'));
+    if(document.getElementById('autoChk').checked&&!buzActive&&sts.includes('warn'))triggerBuzzer();
+  } else {
+    bn.className='status-banner sb-ok';
+    document.getElementById('bannerTxt').textContent=t.allOk;
+    if(buzActive)stopBuzzer();
+  }
+}
+
+// ── MODE ──────────────────────────────────────
+function setMode(m){
+  mode=m;hist={temp:[],hum:[],gas:[]};
+  document.getElementById('btnLS').classList.toggle('active',m==='livestock');
+  document.getElementById('btnFS').classList.toggle('active',m==='fisheries');
+  const ml=document.getElementById('modeTag');
+  if(ml)ml.textContent='— '+(lang==='en'?(m==='livestock'?'LIVESTOCK MODE':'FISHERIES MODE'):(m==='livestock'?'கால்நடை பயன்முறை':'மீன்வளர்ப்பு பயன்முறை'));
+  renderSp();renderRef();update();
+}
+function renderSp(){
+  const list=MODES[mode].sp[lang];
+  document.getElementById('spPanel').innerHTML=list.map(s=>'<div class="sp-card"><div class="sp-name">'+s.n+'</div><div class="sp-type">'+s.t+'</div>'+s.r.map(r=>'<div class="sp-row"><span class="sp-param">'+r[0]+'</span><span class="sp-range">'+r[1]+'</span></div>').join('')+'</div>').join('');
+}
+function renderRef(){
+  const rows=MODES[mode].ref[lang];
+  document.getElementById('refTbody').innerHTML=rows.map(r=>'<tr><td>'+r[0]+'</td><td>'+r[1]+'</td><td class="td-ok">'+r[2]+'</td><td class="td-red">'+r[3]+'</td><td class="td-src">'+r[4]+'</td></tr>').join('');
+}
+function clearLog(){
+  const t=T[lang];
+  document.getElementById('logCont').innerHTML='<div class="log-empty" id="logEmpty">'+t.logEmpty+'</div>';
+  sndCnt=0;const sc=document.getElementById('sndCnt');if(sc)sc.textContent='0';
+}
+
+// ── CLOCK ─────────────────────────────────────
+setInterval(()=>document.getElementById('clock').textContent=new Date().toLocaleTimeString(),1000);
+
+// ── INIT ──────────────────────────────────────
+applyLang();renderSp();renderRef();update();setInterval(update,2500);
+</script>
+</body>
+</html>

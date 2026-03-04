@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AquaSense — Smart Fish Farm Monitor</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#0a0f0d;--surface:#111a15;--surface2:#162018;--border:#1f3328;
+  --green:#22c55e;--teal:#14b8a6;--amber:#f59e0b;--red:#ef4444;--blue:#3b82f6;--cyan:#06b6d4;
+  --text:#e2f0e7;--muted:#5a7a63;
+  --mono:'Space Mono',monospace;--disp:'Syne',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--disp);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(34,197,94,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(34,197,94,.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+.wrap{position:relative;z-index:1;max-width:1480px;margin:0 auto;padding:20px 24px}
+
+/* ── HEADER ── */
+header{display:flex;align-items:center;justify-content:space-between;padding:18px 26px;background:var(--surface);border:1px solid var(--border);border-radius:16px;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-icon{width:40px;height:40px;background:linear-gradient(135deg,var(--teal),var(--green));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#000;font-family:var(--mono)}
+.logo-text h1{font-size:1.2rem;font-weight:800;letter-spacing:-.02em}
+.logo-text span{font-size:.65rem;color:var(--muted);font-family:var(--mono);text-transform:uppercase;letter-spacing:.12em}
+.hdr-r{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.live-badge{display:flex;align-items:center;gap:6px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);padding:5px 12px;border-radius:100px;font-family:var(--mono);font-size:.68rem;color:var(--green);text-transform:uppercase;letter-spacing:.08em}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pdot 1.4s ease infinite}
+@keyframes pdot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+.clock{font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+
+/* ── GLOBAL STATUS BANNER ── */
+.status-banner{padding:12px 20px;border-radius:12px;margin-bottom:20px;display:flex;align-items:center;gap:10px;font-weight:600;font-size:.88rem;transition:all .4s}
+.sb-ok{background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.25);color:var(--green)}
+.sb-warn{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);color:var(--amber)}
+.sb-alert{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.35);color:var(--red);animation:fbanner .7s ease infinite}
+@keyframes fbanner{0%,100%{opacity:1}50%{opacity:.6}}
+.banner-icon{font-size:1rem;flex-shrink:0}
+
+/* ── GRID LAYOUT ── */
+.grid-main{display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:auto auto;gap:18px;margin-bottom:18px}
+.grid-bottom{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
+.grid-full{margin-bottom:18px}
+
+/* ── PANEL BASE ── */
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:22px;position:relative;overflow:hidden;transition:border-color .3s,transform .2s}
+.panel:hover{transform:translateY(-1px)}
+.panel::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:16px 16px 0 0;background:var(--pc,var(--teal))}
+.panel-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px}
+.panel-title-block{}
+.panel-tag{font-size:.6rem;font-family:var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.12em;margin-bottom:4px}
+.panel-title{font-size:.95rem;font-weight:800}
+.panel-badge{padding:4px 10px;border-radius:6px;font-size:.62rem;font-family:var(--mono);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.pb-ok{background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.2)}
+.pb-warn{background:rgba(245,158,11,.12);color:var(--amber);border:1px solid rgba(245,158,11,.2)}
+.pb-alert{background:rgba(239,68,68,.12);color:var(--red);border:1px solid rgba(239,68,68,.2);animation:ftxt .6s ease infinite}
+@keyframes ftxt{0%,100%{opacity:1}50%{opacity:.4}}
+.pb-off{background:rgba(90,122,99,.1);color:var(--muted);border:1px solid var(--border)}
+.pb-on{background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.25)}
+
+/* ── STAT ROW ── */
+.stat-row{display:flex;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.stat-box{flex:1;min-width:80px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px}
+.stat-lbl{font-size:.6rem;font-family:var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px}
+.stat-val{font-size:1.4rem;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+.stat-unit{font-size:.75rem;font-weight:400;color:var(--muted)}
+
+/* ── CAMERA FEED ── */
+.cam-feed{width:100%;height:160px;background:#0c1510;border:1px solid var(--border);border-radius:10px;position:relative;overflow:hidden;margin-bottom:14px}
+.cam-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.cam-scanline{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(34,197,94,.015) 3px,rgba(34,197,94,.015) 4px);pointer-events:none}
+.cam-corner{position:absolute;width:16px;height:16px;border-color:var(--teal);border-style:solid;opacity:.7}
+.cam-corner.tl{top:8px;left:8px;border-width:2px 0 0 2px}
+.cam-corner.tr{top:8px;right:8px;border-width:2px 2px 0 0}
+.cam-corner.bl{bottom:8px;left:8px;border-width:0 0 2px 2px}
+.cam-corner.br{bottom:8px;right:8px;border-width:0 2px 2px 0}
+.cam-status{position:absolute;bottom:8px;right:10px;font-family:var(--mono);font-size:.58rem;color:var(--teal);background:rgba(0,0,0,.5);padding:3px 7px;border-radius:4px}
+.cam-label{position:absolute;top:8px;left:10px;font-family:var(--mono);font-size:.58rem;color:var(--teal);background:rgba(0,0,0,.5);padding:3px 7px;border-radius:4px}
+canvas#camCanvas{width:100%;height:100%;display:block}
+
+/* bounding boxes drawn on canvas */
+
+/* ── FISH ANALYTICS ── */
+.analytics-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px}
+.a-box{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center}
+.a-lbl{font-size:.58rem;font-family:var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px}
+.a-val{font-size:1.25rem;font-weight:800;font-variant-numeric:tabular-nums}
+
+/* ── ALERT WARNING BANNER ── */
+.alert-banner{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;margin-bottom:12px;font-size:.78rem;font-weight:600;transition:all .3s}
+.alert-banner.active{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);color:var(--red);animation:fbanner .7s ease infinite}
+.alert-banner.inactive{background:var(--surface2);border:1px solid var(--border);color:var(--muted)}
+.alert-icon{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;flex-shrink:0}
+.alert-icon.red{background:rgba(239,68,68,.2);color:var(--red)}
+.alert-icon.muted{background:rgba(90,122,99,.15);color:var(--muted)}
+
+/* ── TEMPERATURE GAUGE ── */
+.gauge-wrap{display:flex;align-items:center;gap:18px;margin-bottom:14px}
+.gauge-svg-wrap{flex-shrink:0;width:100px;height:60px;position:relative}
+.temp-big{font-size:2.6rem;font-weight:800;font-variant-numeric:tabular-nums;line-height:1;margin-bottom:4px}
+.temp-unit{font-size:1rem;color:var(--muted)}
+.range-bar{height:7px;border-radius:4px;background:var(--surface2);position:relative;overflow:visible;margin-bottom:4px}
+.range-safe-zone{position:absolute;height:100%;border-radius:4px;background:linear-gradient(90deg,rgba(34,197,94,.2),rgba(34,197,94,.35));border:1px solid rgba(34,197,94,.35)}
+.range-needle{position:absolute;top:50%;transform:translate(-50%,-50%);width:13px;height:13px;border-radius:50%;background:var(--pc,var(--green));border:2px solid var(--bg);box-shadow:0 0 0 2px var(--pc,var(--green));transition:left .6s cubic-bezier(.34,1.56,.64,1)}
+.range-limits{display:flex;justify-content:space-between;font-size:.6rem;font-family:var(--mono);color:var(--muted);margin-top:3px}
+
+/* ── SPARKLINE ── */
+.spark-wrap{margin-top:12px}
+.spark-lbl{font-size:.6rem;font-family:var(--mono);color:var(--muted);margin-bottom:4px}
+canvas.spark{width:100%;height:44px;display:block}
+
+/* ── OXYGEN RISK ── */
+.risk-meter{display:flex;gap:6px;margin:12px 0}
+.risk-seg{flex:1;height:10px;border-radius:3px;transition:all .3s}
+.risk-seg.low{background:rgba(34,197,94,.25);border:1px solid rgba(34,197,94,.3)}
+.risk-seg.moderate{background:rgba(245,158,11,.25);border:1px solid rgba(245,158,11,.3)}
+.risk-seg.high{background:rgba(239,68,68,.25);border:1px solid rgba(239,68,68,.3)}
+.risk-seg.active-low{background:var(--green);box-shadow:0 0 8px rgba(34,197,94,.5)}
+.risk-seg.active-moderate{background:var(--amber);box-shadow:0 0 8px rgba(245,158,11,.5)}
+.risk-seg.active-high{background:var(--red);box-shadow:0 0 8px rgba(239,68,68,.5)}
+.risk-labels{display:flex;gap:6px;margin-bottom:10px}
+.risk-lbl{flex:1;font-size:.6rem;font-family:var(--mono);color:var(--muted);text-align:center;text-transform:uppercase;letter-spacing:.06em}
+.risk-value-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.risk-big{font-size:1.8rem;font-weight:800}
+.risk-desc{font-size:.78rem;color:var(--muted);line-height:1.4}
+
+/* ── PUMP / AERATION ── */
+.pump-indicator{display:flex;align-items:center;gap:16px;margin-bottom:14px}
+.pump-icon-wrap{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0}
+.pump-icon-wrap.on{background:radial-gradient(circle,rgba(20,184,166,.2),rgba(20,184,166,.05));border:2px solid rgba(20,184,166,.4);animation:pump-pulse 1.2s ease infinite}
+.pump-icon-wrap.off{background:var(--surface2);border:2px solid var(--border)}
+@keyframes pump-pulse{0%,100%{box-shadow:0 0 0 0 rgba(20,184,166,.4)}50%{box-shadow:0 0 0 10px rgba(20,184,166,0)}}
+.pump-symbol{font-size:1.6rem;font-weight:800;font-family:var(--mono);color:var(--teal)}
+.pump-symbol.off-sym{color:var(--muted)}
+.pump-info{}
+.pump-state-lbl{font-size:1.1rem;font-weight:800;margin-bottom:3px}
+.pump-sub{font-size:.68rem;font-family:var(--mono);color:var(--muted)}
+.pump-toggle{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;margin-bottom:12px}
+.toggle-lbl{font-size:.72rem;font-family:var(--mono);color:var(--muted)}
+.toggle-sw{position:relative;width:42px;height:22px;cursor:pointer}
+.toggle-sw input{opacity:0;width:0;height:0}
+.toggle-track{position:absolute;inset:0;background:var(--surface);border:1px solid var(--border);border-radius:11px;transition:.3s}
+.toggle-track::before{content:'';position:absolute;width:16px;height:16px;left:2px;top:2px;background:var(--muted);border-radius:50%;transition:.3s}
+.toggle-sw input:checked + .toggle-track{background:rgba(20,184,166,.2);border-color:var(--teal)}
+.toggle-sw input:checked + .toggle-track::before{transform:translateX(20px);background:var(--teal)}
+.pump-log{max-height:80px;overflow-y:auto}
+
+/* ── BUZZER PANEL ── */
+.buz-panel{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px 24px;margin-bottom:18px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;position:relative;overflow:hidden}
+.buz-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--red),var(--amber));border-radius:16px 16px 0 0}
+.buz-vis{position:relative;flex-shrink:0;width:80px;height:80px;display:flex;align-items:center;justify-content:center}
+.buz-body{width:56px;height:56px;border-radius:50%;background:radial-gradient(circle at 36% 32%,#ff7f7f,#c0392b 55%,#7a1010);border:3px solid #8b1a1a;box-shadow:0 4px 18px rgba(239,68,68,.2),inset 0 -4px 8px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;position:relative;z-index:2;transition:all .1s;font-family:var(--mono);font-weight:800;font-size:.7rem;color:rgba(255,255,255,.6)}
+.buz-body::after{content:'';position:absolute;top:11px;left:13px;width:9px;height:5px;background:rgba(255,255,255,.25);border-radius:50%;transform:rotate(-30deg)}
+.buz-ring{position:absolute;border-radius:50%;border:2px solid rgba(239,68,68,.35);top:50%;left:50%;transform:translate(-50%,-50%)}
+.buz-ring.r1{width:68px;height:68px}
+.buz-ring.r2{width:80px;height:80px;border-color:rgba(239,68,68,.18)}
+.buz-on .buz-body{box-shadow:0 0 0 5px rgba(239,68,68,.3),0 4px 28px rgba(239,68,68,.6),inset 0 -4px 8px rgba(0,0,0,.4);animation:bshk .08s ease infinite}
+.buz-on .buz-ring.r1{animation:rexp .5s ease-out infinite}
+.buz-on .buz-ring.r2{animation:rexp .5s ease-out .17s infinite}
+@keyframes bshk{0%,100%{transform:translate(0,0)}25%{transform:translate(-1px,1px)}75%{transform:translate(1px,-1px)}}
+@keyframes rexp{0%{transform:translate(-50%,-50%) scale(1);opacity:.7}100%{transform:translate(-50%,-50%) scale(1.9);opacity:0}}
+.buz-ctrl{flex:1;min-width:200px}
+.buz-title{font-weight:800;font-size:.95rem;margin-bottom:2px}
+.buz-sub{font-size:.65rem;color:var(--muted);font-family:var(--mono);margin-bottom:10px}
+.buz-state{font-size:.7rem;font-family:var(--mono);font-weight:700;padding:3px 9px;border-radius:4px;display:inline-block;margin-bottom:10px}
+.bs-off{background:rgba(90,122,99,.15);color:var(--muted)}
+.bs-on{background:rgba(239,68,68,.15);color:var(--red);animation:ftxt .5s ease infinite}
+.vol-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.vol-lbl{font-size:.65rem;font-family:var(--mono);color:var(--muted);min-width:52px}
+input[type=range].vsl{flex:1;-webkit-appearance:none;height:5px;border-radius:3px;background:var(--surface2);outline:none;cursor:pointer}
+input[type=range].vsl::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--red);border:2px solid var(--bg);cursor:pointer}
+.vol-val{font-size:.65rem;font-family:var(--mono);color:var(--red);min-width:32px;text-align:right}
+.freq-row{display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-bottom:9px}
+.freq-lbl{font-size:.63rem;font-family:var(--mono);color:var(--muted)}
+.freq-btn{padding:3px 9px;border-radius:5px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:.63rem;font-family:var(--mono);cursor:pointer;transition:all .2s}
+.freq-btn.act{background:rgba(239,68,68,.12);border-color:var(--red);color:var(--red)}
+.buz-btns{display:flex;gap:7px;flex-wrap:wrap}
+.bb{padding:6px 14px;border-radius:7px;border:none;cursor:pointer;font-size:.75rem;font-weight:700;font-family:var(--disp);transition:all .2s}
+.bb-trig{background:var(--red);color:#fff}
+.bb-trig:hover{background:#dc2626}
+.bb-stop{background:var(--surface2);color:var(--muted);border:1px solid var(--border)}
+.bb-stop:hover{color:var(--text)}
+.bb-test{background:rgba(245,158,11,.12);color:var(--amber);border:1px solid rgba(245,158,11,.28)}
+.bb-test:hover{background:rgba(245,158,11,.22)}
+.buz-meta{text-align:center;min-width:100px}
+.buz-meta-lbl{font-size:.6rem;font-family:var(--mono);color:var(--muted);margin-bottom:5px}
+.buz-count{font-size:2rem;font-weight:800;color:var(--red)}
+.buz-auto{display:flex;align-items:center;gap:7px;cursor:pointer;justify-content:center;margin-bottom:3px}
+.buz-auto span{font-size:.72rem}
+
+/* ── EVENT LOG ── */
+.log-area{max-height:240px;overflow-y:auto}
+.log-area::-webkit-scrollbar{width:4px}
+.log-area::-webkit-scrollbar-track{background:var(--surface2)}
+.log-area::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.log-entry{padding:9px 13px;border-radius:7px;background:var(--surface2);margin-bottom:7px;display:flex;align-items:center;gap:9px;font-size:.75rem;animation:slin .3s ease;border-left:3px solid transparent}
+.log-entry.ev-alert{border-left-color:var(--red)}
+.log-entry.ev-warn{border-left-color:var(--amber)}
+.log-entry.ev-ok{border-left-color:var(--green)}
+@keyframes slin{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
+.log-time{font-family:var(--mono);font-size:.62rem;color:var(--muted);min-width:56px;flex-shrink:0}
+.log-sev{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.log-msg{flex:1}
+.log-badge{font-family:var(--mono);font-size:.55rem;padding:2px 7px;border-radius:3px;text-transform:uppercase;font-weight:700;margin-left:auto;flex-shrink:0}
+.lb-alert{background:rgba(239,68,68,.15);color:var(--red)}
+.lb-warn{background:rgba(245,158,11,.15);color:var(--amber)}
+.lb-ok{background:rgba(34,197,94,.15);color:var(--green)}
+.log-empty{color:var(--muted);font-size:.78rem;font-family:var(--mono);padding:12px 0}
+.sec-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.sec-title{font-size:.88rem;font-weight:800}
+.sec-action{font-size:.65rem;font-family:var(--mono);color:var(--muted);cursor:pointer;transition:color .2s}
+.sec-action:hover{color:var(--red)}
+
+/* ── SYSTEM STATUS ── */
+.sys-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.sys-item{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px}
+.sys-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.sys-dot.active{background:var(--green);box-shadow:0 0 6px rgba(34,197,94,.5);animation:pdot 1.8s ease infinite}
+.sys-dot.standby{background:var(--amber)}
+.sys-dot.inactive{background:var(--muted)}
+.sys-dot.alert{background:var(--red);animation:pdot 0.6s ease infinite}
+.sys-item-info{}
+.sys-item-name{font-size:.72rem;font-weight:700;margin-bottom:1px}
+.sys-item-val{font-size:.6rem;font-family:var(--mono);color:var(--muted)}
+
+/* ── SECTION DIVIDER ── */
+.section-label{font-size:.6rem;font-family:var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.14em;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ── MINI LOG ── */
+.mini-log{max-height:70px;overflow-y:auto}
+.mini-log-entry{display:flex;align-items:center;gap:7px;padding:5px 0;border-bottom:1px solid rgba(31,51,40,.5);font-size:.68rem}
+.mini-log-entry:last-child{border:none}
+.mini-log-time{font-family:var(--mono);font-size:.58rem;color:var(--muted)}
+.mini-log-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1100px){
+  .grid-main{grid-template-columns:1fr 1fr}
+  .grid-bottom{grid-template-columns:1fr}
+}
+@media(max-width:700px){
+  .grid-main{grid-template-columns:1fr}
+  .buz-panel{flex-direction:column}
+  .gauge-wrap{flex-direction:column}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <div class="logo-icon">AS</div>
+    <div class="logo-text">
+      <h1>AquaSense</h1>
+      <span>Smart Fish Farm IoT Monitor — Fisheries Module</span>
+    </div>
+  </div>
+  <div class="hdr-r">
+    <div class="live-badge"><div class="live-dot"></div>Live Feed</div>
+    <div class="clock" id="clock">--:--:--</div>
+  </div>
+</header>
+
+<!-- GLOBAL STATUS BANNER -->
+<div class="status-banner sb-ok" id="globalBanner">
+  <span class="banner-icon" id="bannerIcon">●</span>
+  <span id="bannerTxt">All parameters within safe operating range — System Normal</span>
+</div>
+
+<!-- BUZZER PANEL -->
+<div class="buz-panel">
+  <div class="buz-vis" id="buzVis">
+    <div class="buz-ring r1"></div>
+    <div class="buz-ring r2"></div>
+    <div class="buz-body" id="buzBodyLbl">BUZ</div>
+  </div>
+  <div class="buz-ctrl">
+    <div class="buz-title">Alert Buzzer Simulation</div>
+    <div class="buz-sub">Hardware buzzer simulation — replaces physical piezo buzzer on ESP32 / Arduino</div>
+    <div class="buz-state bs-off" id="buzState">&#9632; STANDBY</div>
+    <div class="vol-row">
+      <span class="vol-lbl">Volume</span>
+      <input type="range" class="vsl" id="volSlider" min="0" max="1" step="0.05" value="0.6" oninput="document.getElementById('volVal').textContent=Math.round(this.value*100)+'%'"/>
+      <span class="vol-val" id="volVal">60%</span>
+    </div>
+    <div class="freq-row">
+      <span class="freq-lbl">Tone Pattern:</span>
+      <button class="freq-btn act" id="f1" onclick="setFreq(880,'short')">Short Beep</button>
+      <button class="freq-btn" id="f2" onclick="setFreq(1200,'long')">Long Tone</button>
+      <button class="freq-btn" id="f3" onclick="setFreq(600,'pulse')">Pulse</button>
+      <button class="freq-btn" id="f4" onclick="setFreq(1500,'siren')">Siren</button>
+    </div>
+    <div class="buz-btns">
+      <button class="bb bb-trig" onclick="triggerBuzzer()">Trigger Alert</button>
+      <button class="bb bb-stop" onclick="stopBuzzer()">&#9632; Stop</button>
+      <button class="bb bb-test" onclick="testBuzzer()">&#9654; Test Beep</button>
+    </div>
+  </div>
+  <div class="buz-meta">
+    <div class="buz-meta-lbl">AUTO-TRIGGER</div>
+    <label class="buz-auto">
+      <input type="checkbox" id="autoChk" checked style="width:15px;height:15px;accent-color:var(--red)"/>
+      <span>On Alert</span>
+    </label>
+    <div class="buz-meta-lbl" style="margin-top:12px">TOTAL TRIGGERS</div>
+    <div class="buz-count" id="buzCnt">0</div>
+  </div>
+</div>
+
+<!-- SECTION LABEL -->
+<div class="section-label">Monitoring Panels</div>
+
+<!-- MAIN 3-COL GRID -->
+<div class="grid-main">
+
+  <!-- ── PANEL 1: AI FISH DETECTION ── -->
+  <div class="panel" style="--pc:var(--teal)">
+    <div class="panel-hdr">
+      <div class="panel-title-block">
+        <div class="panel-tag">Panel 01 — AI Vision</div>
+        <div class="panel-title">Fish Detection</div>
+      </div>
+      <div class="panel-badge pb-ok" id="camBadge">ACTIVE</div>
+    </div>
+
+    <!-- Live Camera Feed -->
+    <div class="cam-feed">
+      <canvas id="camCanvas"></canvas>
+      <div class="cam-scanline"></div>
+      <div class="cam-corner tl"></div>
+      <div class="cam-corner tr"></div>
+      <div class="cam-corner bl"></div>
+      <div class="cam-corner br"></div>
+      <div class="cam-label">YOLO v8 — CAM 01</div>
+      <div class="cam-status" id="camStatus">PROCESSING...</div>
+    </div>
+
+    <!-- Fish Analytics -->
+    <div class="analytics-grid">
+      <div class="a-box">
+        <div class="a-lbl">Total Detected</div>
+        <div class="a-val" id="fishTotal" style="color:var(--teal)">--</div>
+      </div>
+      <div class="a-box">
+        <div class="a-lbl">Est. Length</div>
+        <div class="a-val" id="fishLen" style="color:var(--green)">--<span style="font-size:.7rem;color:var(--muted)">cm</span></div>
+      </div>
+      <div class="a-box">
+        <div class="a-lbl">Size Class</div>
+        <div class="a-val" id="fishClass" style="font-size:.9rem;color:var(--amber)">--</div>
+      </div>
+    </div>
+
+    <!-- Juvenile Monitor -->
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:11px 13px;margin-bottom:10px">
+      <div class="stat-lbl" style="margin-bottom:8px">Juvenile Catch Monitor</div>
+      <div style="display:flex;gap:10px;margin-bottom:8px">
+        <div style="flex:1;text-align:center">
+          <div class="a-lbl">Juvenile Count</div>
+          <div style="font-size:1.2rem;font-weight:800;color:var(--amber)" id="juvCount">--</div>
+        </div>
+        <div style="flex:1;text-align:center">
+          <div class="a-lbl">Juvenile %</div>
+          <div style="font-size:1.2rem;font-weight:800" id="juvPct" style="color:var(--green)">--%</div>
+        </div>
+        <div style="flex:1;text-align:center">
+          <div class="a-lbl">Threshold</div>
+          <div style="font-size:1.2rem;font-weight:800;color:var(--muted)">30%</div>
+        </div>
+      </div>
+      <!-- Percentage bar -->
+      <div style="height:6px;border-radius:3px;background:var(--surface);overflow:hidden">
+        <div id="juvBar" style="height:100%;width:0%;border-radius:3px;background:var(--green);transition:width .5s,background .3s"></div>
+      </div>
+    </div>
+
+    <!-- Alert Banner -->
+    <div class="alert-banner inactive" id="fishAlert">
+      <div class="alert-icon muted" id="fishAlertIcon">!</div>
+      <span id="fishAlertTxt">Juvenile threshold within safe limits</span>
+    </div>
+  </div>
+
+  <!-- ── PANEL 2: WATER TEMPERATURE ── -->
+  <div class="panel" style="--pc:var(--green)">
+    <div class="panel-hdr">
+      <div class="panel-title-block">
+        <div class="panel-tag">Panel 02 — DS18B20</div>
+        <div class="panel-title">Water Temperature</div>
+      </div>
+      <div class="panel-badge pb-ok" id="tempBadge">NORMAL</div>
+    </div>
+
+    <div class="gauge-wrap">
+      <div>
+        <div class="temp-big"><span id="tempVal">--.-</span><span class="temp-unit"> °C</span></div>
+        <div style="font-size:.65rem;font-family:var(--mono);color:var(--muted)">Safe Range: 22 – 30 °C</div>
+      </div>
+    </div>
+
+    <!-- Range bar -->
+    <div class="range-bar" style="margin-bottom:4px">
+      <div class="range-safe-zone" id="tempSafe"></div>
+      <div class="range-needle" id="tempNdl" style="background:var(--green);box-shadow:0 0 0 2px var(--green)"></div>
+    </div>
+    <div class="range-limits"><span>15°C</span><span>Safe Zone</span><span>42°C</span></div>
+
+    <!-- Status indicators -->
+    <div style="display:flex;gap:7px;margin:12px 0">
+      <div id="stNorm" style="flex:1;padding:7px;border-radius:6px;text-align:center;font-size:.65rem;font-family:var(--mono);background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.3);font-weight:700">NORMAL</div>
+      <div id="stWarn" style="flex:1;padding:7px;border-radius:6px;text-align:center;font-size:.65rem;font-family:var(--mono);background:var(--surface2);color:var(--muted);border:1px solid var(--border);font-weight:700">WARNING</div>
+      <div id="stCrit" style="flex:1;padding:7px;border-radius:6px;text-align:center;font-size:.65rem;font-family:var(--mono);background:var(--surface2);color:var(--muted);border:1px solid var(--border);font-weight:700">CRITICAL</div>
+    </div>
+
+    <!-- Sparkline -->
+    <div class="spark-wrap">
+      <div class="spark-lbl">Temperature Trend — Last 6 Hours (simulated)</div>
+      <canvas class="spark" id="sp-temp" width="300" height="44"></canvas>
+    </div>
+
+    <!-- Stats -->
+    <div class="stat-row" style="margin-top:12px">
+      <div class="stat-box">
+        <div class="stat-lbl">Min (Session)</div>
+        <div class="stat-val" id="tempMin">--<span class="stat-unit">°C</span></div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-lbl">Max (Session)</div>
+        <div class="stat-val" id="tempMax">--<span class="stat-unit">°C</span></div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-lbl">Avg (Session)</div>
+        <div class="stat-val" id="tempAvg">--<span class="stat-unit">°C</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PANEL 3: OXYGEN RISK ── -->
+  <div class="panel" style="--pc:var(--blue)">
+    <div class="panel-hdr">
+      <div class="panel-title-block">
+        <div class="panel-tag">Panel 03 — Indirect DO</div>
+        <div class="panel-title">Oxygen Risk Estimation</div>
+      </div>
+      <div class="panel-badge pb-ok" id="o2Badge">LOW RISK</div>
+    </div>
+
+    <!-- Risk value -->
+    <div class="risk-value-row">
+      <div class="risk-big" id="o2RiskVal" style="color:var(--green)">LOW</div>
+      <div class="risk-desc">Estimated from water temperature.<br>High temp indicates reduced dissolved O2.</div>
+    </div>
+
+    <!-- Risk meter segments -->
+    <div class="risk-labels">
+      <div class="risk-lbl">Low</div>
+      <div class="risk-lbl">Moderate</div>
+      <div class="risk-lbl">High</div>
+    </div>
+    <div class="risk-meter">
+      <div class="risk-seg low active-low" id="riskLow"></div>
+      <div class="risk-seg moderate" id="riskMod"></div>
+      <div class="risk-seg high" id="riskHigh"></div>
+    </div>
+
+    <!-- Estimated DO -->
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:11px;margin:12px 0">
+      <div class="stat-lbl" style="margin-bottom:6px">Estimated Dissolved Oxygen</div>
+      <div style="font-size:1.6rem;font-weight:800;margin-bottom:2px"><span id="doVal">--</span><span style="font-size:.85rem;color:var(--muted)"> mg/L</span></div>
+      <div style="font-size:.62rem;font-family:var(--mono);color:var(--muted)">Safe threshold: &gt; 5.0 mg/L</div>
+    </div>
+
+    <!-- O2 Spike detection -->
+    <div class="alert-banner inactive" id="o2Alert">
+      <div class="alert-icon muted" id="o2AlertIcon">!</div>
+      <span id="o2AlertTxt">No oxygen depletion risk detected</span>
+    </div>
+
+    <!-- Sparkline for O2 -->
+    <div class="spark-wrap">
+      <div class="spark-lbl">Est. DO Trend — 6 Hr Window</div>
+      <canvas class="spark" id="sp-do" width="300" height="44"></canvas>
+    </div>
+
+    <!-- Logic note -->
+    <div style="margin-top:10px;padding:8px 11px;border-radius:6px;background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.15);font-size:.65rem;font-family:var(--mono);color:#93c5fd;line-height:1.5">
+      LOGIC: Temp &gt; 30°C → DO risk elevated → Aeration pump triggered automatically
+    </div>
+  </div>
+
+</div><!-- /grid-main -->
+
+<!-- SECTION LABEL -->
+<div class="section-label">Control & Logging</div>
+
+<!-- BOTTOM 2-COL GRID -->
+<div class="grid-bottom">
+
+  <!-- ── PANEL 4: AERATION CONTROL ── -->
+  <div class="panel" style="--pc:var(--cyan)">
+    <div class="panel-hdr">
+      <div class="panel-title-block">
+        <div class="panel-tag">Panel 04 — Relay + Pump</div>
+        <div class="panel-title">Aeration Control</div>
+      </div>
+      <div class="panel-badge pb-off" id="pumpBadge">STANDBY</div>
+    </div>
+
+    <div class="pump-indicator">
+      <div class="pump-icon-wrap off" id="pumpIconWrap">
+        <span class="pump-symbol off-sym" id="pumpSymbol">&#9632;</span>
+      </div>
+      <div class="pump-info">
+        <div class="pump-state-lbl" id="pumpStateLbl" style="color:var(--muted)">Pump Offline</div>
+        <div class="pump-sub" id="pumpSubTxt">Awaiting auto-trigger or manual activation</div>
+      </div>
+    </div>
+
+    <div class="pump-toggle">
+      <span class="toggle-lbl">Manual Override</span>
+      <label class="toggle-sw">
+        <input type="checkbox" id="pumpManual" onchange="manualPumpToggle()"/>
+        <div class="toggle-track"></div>
+      </label>
+    </div>
+
+    <div class="pump-toggle">
+      <span class="toggle-lbl">Auto Control (Temp Threshold)</span>
+      <label class="toggle-sw">
+        <input type="checkbox" id="pumpAuto" checked/>
+        <div class="toggle-track"></div>
+      </label>
+    </div>
+
+    <!-- Activation log -->
+    <div style="margin-top:12px">
+      <div class="stat-lbl" style="margin-bottom:7px">Activation Log</div>
+      <div class="mini-log" id="pumpLog">
+        <div style="color:var(--muted);font-size:.68rem;font-family:var(--mono);padding:6px 0">No activations recorded.</div>
+      </div>
+    </div>
+
+    <!-- Run stats -->
+    <div class="stat-row" style="margin-top:12px">
+      <div class="stat-box">
+        <div class="stat-lbl">Run Cycles</div>
+        <div class="stat-val" id="pumpCycles">0</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-lbl">Last Trigger</div>
+        <div class="stat-val" id="pumpLastTrig" style="font-size:.9rem">--:--</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-lbl">Auto Reason</div>
+        <div class="stat-val" id="pumpReason" style="font-size:.75rem;color:var(--muted)">--</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PANEL 5: ALERT & EVENT LOG ── -->
+  <div class="panel" style="--pc:var(--amber)">
+    <div class="panel-hdr">
+      <div class="panel-title-block">
+        <div class="panel-tag">Panel 05 — Buzzer + MCU Log</div>
+        <div class="panel-title">Alert & Event Log</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <div class="panel-badge pb-off" id="logCountBadge">0 EVENTS</div>
+      </div>
+    </div>
+
+    <div class="sec-hdr" style="margin-bottom:10px">
+      <span style="font-size:.65rem;font-family:var(--mono);color:var(--muted)">Most recent first — auto-scroll</span>
+      <span class="sec-action" onclick="clearLog()">Clear Log</span>
+    </div>
+
+    <div class="log-area" id="logArea">
+      <div class="log-empty" id="logEmpty">No events recorded. System is monitoring.</div>
+    </div>
+  </div>
+
+</div><!-- /grid-bottom -->
+
+<!-- SECTION LABEL -->
+<div class="section-label">System Status</div>
+
+<!-- ── PANEL 6: SYSTEM STATUS ── -->
+<div class="panel grid-full" style="--pc:var(--muted)">
+  <div class="panel-hdr">
+    <div class="panel-title-block">
+      <div class="panel-tag">Panel 06 — System Health</div>
+      <div class="panel-title">System Status</div>
+    </div>
+    <div class="panel-badge pb-ok" id="sysBadge">ALL SYSTEMS OPERATIONAL</div>
+  </div>
+
+  <div class="sys-grid">
+    <div class="sys-item">
+      <div class="sys-dot active" id="sysCam"></div>
+      <div class="sys-item-info">
+        <div class="sys-item-name">Camera Module</div>
+        <div class="sys-item-val" id="sysCamVal">Active — YOLO v8</div>
+      </div>
+    </div>
+    <div class="sys-item">
+      <div class="sys-dot active" id="sysTempSens"></div>
+      <div class="sys-item-info">
+        <div class="sys-item-name">Temp Sensor</div>
+        <div class="sys-item-val" id="sysTempVal">Active — DS18B20</div>
+      </div>
+    </div>
+    <div class="sys-item">
+      <div class="sys-dot standby" id="sysPump"></div>
+      <div class="sys-item-info">
+        <div class="sys-item-name">Aeration Pump</div>
+        <div class="sys-item-val" id="sysPumpVal">Standby — Relay OK</div>
+      </div>
+    </div>
+    <div class="sys-item">
+      <div class="sys-dot standby" id="sysServo"></div>
+      <div class="sys-item-info">
+        <div class="sys-item-name">Servo (Escape Hatch)</div>
+        <div class="sys-item-val" id="sysServoVal">Standby — Ready</div>
+      </div>
+    </div>
+    <div class="sys-item">
+      <div class="sys-dot active" id="sysBuzzer"></div>
+      <div class="sys-item-info">
+        <div class="sys-item-name">Alert Buzzer</div>
+        <div class="sys-item-val" id="sysBuzzerVal">Ready — Standby</div>
+      </div>
+    </div>
+    <div class="sys-item">
+      <div class="sys-dot active" id="sysMCU"></div>
+      <div class="sys-item-info">
+        <div class="sys-item-name">Microcontroller</div>
+        <div class="sys-item-val" id="sysMCUVal">Online — ESP32</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:14px;display:flex;gap:18px;flex-wrap:wrap">
+    <div style="font-size:.62rem;font-family:var(--mono);color:var(--muted)">UPTIME: <span id="uptime" style="color:var(--green)">00:00:00</span></div>
+    <div style="font-size:.62rem;font-family:var(--mono);color:var(--muted)">FIRMWARE: <span style="color:var(--teal)">v2.4.1</span></div>
+    <div style="font-size:.62rem;font-family:var(--mono);color:var(--muted)">LAST SYNC: <span id="lastSync" style="color:var(--text)">--:--:--</span></div>
+    <div style="font-size:.62rem;font-family:var(--mono);color:var(--muted)">SERVO TRIGGERS: <span id="servoCount" style="color:var(--amber)">0</span></div>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+// ── AUDIO ENGINE ──────────────────────────────
+let audioCtx=null,buzIv=null,buzActive=false,buzFreq=880,buzPat='short',buzCntVal=0;
+function getCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;}
+function beep(f,dur,vol){
+  try{
+    const c=getCtx();const o=c.createOscillator();const g=c.createGain();
+    o.connect(g);g.connect(c.destination);o.type='square';o.frequency.value=f;
+    g.gain.setValueAtTime(vol*.3,c.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,c.currentTime+dur);
+    o.start(c.currentTime);o.stop(c.currentTime+dur);
+  }catch(e){}
+}
+function playPat(pat,f,v){
+  if(pat==='short'){beep(f,.15,v);}
+  else if(pat==='long'){beep(f,.6,v);}
+  else if(pat==='pulse'){beep(f,.08,v);setTimeout(()=>beep(f,.08,v),160);setTimeout(()=>beep(f,.08,v),320);}
+  else if(pat==='siren'){beep(f,.25,v);setTimeout(()=>beep(f*.75,.25,v),290);}
+}
+function triggerBuzzer(){
+  if(buzActive)return;
+  buzActive=true;buzCntVal++;
+  document.getElementById('buzCnt').textContent=buzCntVal;
+  document.getElementById('buzVis').classList.add('buz-on');
+  document.getElementById('buzState').className='buz-state bs-on';
+  document.getElementById('buzState').textContent='▶ ACTIVE';
+  document.getElementById('sysBuzzerVal').textContent='ALERTING — Active';
+  document.getElementById('sysBuzzer').className='sys-dot alert';
+  const v=parseFloat(document.getElementById('volSlider').value);
+  playPat(buzPat,buzFreq,v);
+  const delay=buzPat==='pulse'?650:buzPat==='siren'?720:850;
+  buzIv=setInterval(()=>{if(!buzActive){clearInterval(buzIv);return;}playPat(buzPat,buzFreq,v);},delay);
+}
+function stopBuzzer(){
+  buzActive=false;clearInterval(buzIv);
+  document.getElementById('buzVis').classList.remove('buz-on');
+  document.getElementById('buzState').className='buz-state bs-off';
+  document.getElementById('buzState').textContent='■ STANDBY';
+  document.getElementById('sysBuzzerVal').textContent='Ready — Standby';
+  document.getElementById('sysBuzzer').className='sys-dot active';
+}
+function testBuzzer(){const v=parseFloat(document.getElementById('volSlider').value);playPat(buzPat,buzFreq,v);}
+function setFreq(f,pat){
+  buzFreq=f;buzPat=pat;
+  document.querySelectorAll('.freq-btn').forEach(b=>b.classList.remove('act'));
+  const m={short:'f1',long:'f2',pulse:'f3',siren:'f4'};
+  document.getElementById(m[pat]).classList.add('act');
+  if(buzActive){stopBuzzer();setTimeout(triggerBuzzer,100);}
+}
+
+// ── STATE ────────────────────────────────────
+let sensor={temp:26.5,fish:8,juvCount:2};
+let tempHist=[],doHist=[];
+let pumpOn=false,pumpManOn=false,pumpCycles=0;
+let servoTriggers=0,logCount=0;
+let startTime=Date.now();
+let fishFps=0;
+
+// ── SIMULATION ───────────────────────────────
+function simTick(){
+  sensor.temp=Math.max(18,Math.min(38,sensor.temp+(Math.random()-.47)*.3));
+  sensor.fish=Math.max(1,Math.min(18,Math.round(sensor.fish+(Math.random()-.5)*1.5)));
+  sensor.juvCount=Math.max(0,Math.min(sensor.fish,Math.round(sensor.juvCount+(Math.random()-.5)*.8)));
+  fishFps=Math.floor(Math.random()*3)+24;
+}
+
+// ── TEMPERATURE ──────────────────────────────
+function getT(){return sensor.temp;}
+function getTStatus(t){if(t>=22&&t<=30)return'ok';if(t<20||t>34)return'alert';return'warn';}
+function updateTemp(){
+  const t=getT();
+  tempHist.push(t);if(tempHist.length>30)tempHist.shift();
+  document.getElementById('tempVal').textContent=t.toFixed(1);
+  const st=getTStatus(t);
+  const badge=document.getElementById('tempBadge');
+  const {tmin,tmax}={tmin:15,tmax:42};
+  const pct=v=>Math.max(0,Math.min(100,((v-tmin)/(tmax-tmin))*100));
+  document.getElementById('tempSafe').style.cssText='left:'+pct(22)+'%;width:'+(pct(30)-pct(22))+'%';
+  const ndl=document.getElementById('tempNdl');
+  ndl.style.left=pct(t)+'%';
+  const cols={ok:'var(--green)',warn:'var(--amber)',alert:'var(--red)'};
+  ndl.style.background=cols[st];ndl.style.boxShadow='0 0 0 2px '+cols[st];
+  if(st==='ok'){
+    badge.className='panel-badge pb-ok';badge.textContent='NORMAL';
+    document.getElementById('stNorm').style.cssText='flex:1;padding:7px;border-radius:6px;text-align:center;font-size:.65rem;font-family:var(--mono);background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.3);font-weight:700';
+    document.getElementById('stWarn').style.cssText='flex:1;padding:7px;border-radius:6px;text-align:center;font-size:.65rem;font-family:var(--mono);background:var(--surface2);color:var(--muted);border:1px solid var(--border);font-weight:700';
+    document.getElementById('stCrit').style.cssText='flex:1;padding:7px;border-radius:6px;text-align:center;font-size:.65rem;font-family:var(--mono);background:var(--surface2);color:var(--muted);border:1px solid var(--border);font-weight:700';
+  }else if(st==='warn'){
+    badge.className='panel-badge pb-warn';badge.textContent='WARNING';
+    document.getElementById('stNorm').style.cssText='flex:1;padding:7px;border-radius:6px;text-align:center;font-size:.65rem;font-family:var(--mono);background:var(--surface2);color:var(--muted);border:1px solid var(--border);font-weight:700';
+    document.getElementById('stWarn').style.cssText='flex:1;padding:7px;border-radius:6px;text-align:center;font-size:.65rem;font-family:var(--mono);background:rgba(245,158,11,.15);color:var(--amber);border:1px solid rgba(245,158,11,.3);font-weight:700';
+    document.getElementById('stCrit').style.cssText='flex:1;padding:7px;border-radius:6px;text-align:center;font-size:.65rem;font-family:var(--mono);background:var(--surface2);color:var(--muted);border:1px solid var(--border);font-weight:700';
+  }else{
+    badge.className='panel-badge pb-alert';badge.textContent='CRITICAL';
+    document.getElementById('stNorm').style.cssText='flex:1;padding:7px;border-radius:6px;text-align:center;font-size:.65rem;font-family:var(--mono);background:var(--surface2);color:var(--muted);border:1px solid var(--border);font-weight:700';
+    document.getElementById('stWarn').style.cssText='flex:1;padding:7px;border-radius:6px;text-align:center;font-size:.65rem;font-family:var(--mono);background:var(--surface2);color:var(--muted);border:1px solid var(--border);font-weight:700';
+    document.getElementById('stCrit').style.cssText='flex:1;padding:7px;border-radius:6px;text-align:center;font-size:.65rem;font-family:var(--mono);background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.3);font-weight:700';
+  }
+  if(tempHist.length>0){
+    document.getElementById('tempMin').innerHTML=Math.min(...tempHist).toFixed(1)+'<span class="stat-unit">°C</span>';
+    document.getElementById('tempMax').innerHTML=Math.max(...tempHist).toFixed(1)+'<span class="stat-unit">°C</span>';
+    document.getElementById('tempAvg').innerHTML=(tempHist.reduce((a,b)=>a+b,0)/tempHist.length).toFixed(1)+'<span class="stat-unit">°C</span>';
+  }
+  sparkline('sp-temp',tempHist,'#22c55e');
+  return st;
+}
+
+// ── OXYGEN RISK ──────────────────────────────
+function getO2Risk(t){if(t<=27)return'low';if(t<=31)return'moderate';return'high';}
+function getDO(t){return Math.max(3,14.62-.3898*t).toFixed(1);}
+function updateO2(){
+  const t=getT();const risk=getO2Risk(t);const do_=getDO(t);
+  const doF=parseFloat(do_);
+  doHist.push(doF);if(doHist.length>30)doHist.shift();
+  document.getElementById('doVal').textContent=do_;
+  const badge=document.getElementById('o2Badge');
+  const rv=document.getElementById('o2RiskVal');
+  const riskLow=document.getElementById('riskLow');
+  const riskMod=document.getElementById('riskMod');
+  const riskHigh=document.getElementById('riskHigh');
+  riskLow.className='risk-seg low';riskMod.className='risk-seg moderate';riskHigh.className='risk-seg high';
+  if(risk==='low'){
+    badge.className='panel-badge pb-ok';badge.textContent='LOW RISK';
+    rv.textContent='LOW';rv.style.color='var(--green)';
+    riskLow.className='risk-seg low active-low';
+  }else if(risk==='moderate'){
+    badge.className='panel-badge pb-warn';badge.textContent='MOD. RISK';
+    rv.textContent='MODERATE';rv.style.color='var(--amber)';
+    riskMod.className='risk-seg moderate active-moderate';
+  }else{
+    badge.className='panel-badge pb-alert';badge.textContent='HIGH RISK';
+    rv.textContent='HIGH';rv.style.color='var(--red)';
+    riskHigh.className='risk-seg high active-high';
+  }
+  const o2Alert=document.getElementById('o2Alert');
+  const o2AlertIcon=document.getElementById('o2AlertIcon');
+  const o2AlertTxt=document.getElementById('o2AlertTxt');
+  if(risk!=='low'){
+    o2Alert.className='alert-banner active';
+    o2AlertIcon.className='alert-icon red';
+    o2AlertTxt.textContent='Oxygen Depletion Risk — Aeration pump auto-activation triggered';
+  }else{
+    o2Alert.className='alert-banner inactive';
+    o2AlertIcon.className='alert-icon muted';
+    o2AlertTxt.textContent='No oxygen depletion risk detected';
+  }
+  sparkline('sp-do',doHist,'#3b82f6');
+  return risk;
+}
+
+// ── FISH DETECTION ───────────────────────────
+function updateFish(){
+  const total=sensor.fish,juv=sensor.juvCount;
+  const pct=total>0?Math.round((juv/total)*100):0;
+  document.getElementById('fishTotal').textContent=total;
+  document.getElementById('fishLen').innerHTML=(8+Math.random()*12).toFixed(1)+'<span style="font-size:.7rem;color:var(--muted)">cm</span>';
+  document.getElementById('fishClass').textContent=pct>30?'Juvenile':'Adult';
+  document.getElementById('juvCount').textContent=juv;
+  const pctEl=document.getElementById('juvPct');
+  pctEl.textContent=pct+'%';
+  pctEl.style.color=pct>30?'var(--red)':pct>20?'var(--amber)':'var(--green)';
+  const bar=document.getElementById('juvBar');
+  bar.style.width=Math.min(100,pct)+'%';
+  bar.style.background=pct>30?'var(--red)':pct>20?'var(--amber)':'var(--green)';
+  document.getElementById('camStatus').textContent=fishFps+'fps | '+total+' obj';
+  const fishAlert=document.getElementById('fishAlert');
+  const fishAlertIcon=document.getElementById('fishAlertIcon');
+  const fishAlertTxt=document.getElementById('fishAlertTxt');
+  if(pct>30){
+    fishAlert.className='alert-banner active';
+    fishAlertIcon.className='alert-icon red';
+    fishAlertTxt.textContent='Juvenile threshold exceeded ('+pct+'% > 30%) — Escape hatch triggered';
+    return 'alert';
+  }else if(pct>20){
+    fishAlert.className='alert-banner active';
+    fishAlertIcon.className='alert-icon red';
+    fishAlertTxt.textContent='Juvenile percentage elevated ('+pct+'%) — Monitor closely';
+    return 'warn';
+  }else{
+    fishAlert.className='alert-banner inactive';
+    fishAlertIcon.className='alert-icon muted';
+    fishAlertTxt.textContent='Juvenile threshold within safe limits ('+pct+'% of 30% max)';
+    return 'ok';
+  }
+}
+
+// ── PUMP CONTROL ─────────────────────────────
+function setPump(on,reason){
+  const wasOn=pumpOn;pumpOn=on;
+  const wrap=document.getElementById('pumpIconWrap');
+  const sym=document.getElementById('pumpSymbol');
+  const badge=document.getElementById('pumpBadge');
+  const lbl=document.getElementById('pumpStateLbl');
+  const sub=document.getElementById('pumpSubTxt');
+  const sysPump=document.getElementById('sysPump');
+  const sysPumpVal=document.getElementById('sysPumpVal');
+  if(on){
+    wrap.className='pump-icon-wrap on';
+    sym.innerHTML='&#9654;';sym.className='pump-symbol';
+    badge.className='panel-badge pb-on';badge.textContent='RUNNING';
+    lbl.textContent='Pump Active';lbl.style.color='var(--teal)';
+    sub.textContent='Auto-activated: '+reason;
+    sysPump.className='sys-dot active';sysPumpVal.textContent='Active — Running';
+    if(!wasOn){
+      pumpCycles++;document.getElementById('pumpCycles').textContent=pumpCycles;
+      const now=new Date();const ts=[now.getHours(),now.getMinutes(),now.getSeconds()].map(n=>String(n).padStart(2,'0')).join(':');
+      document.getElementById('pumpLastTrig').textContent=ts.slice(0,5);
+      document.getElementById('pumpReason').textContent=reason;
+      addPumpLog(ts+' Pump Activated — '+reason);
+      addLog('Aeration Pump Activated — '+reason,'warn');
+    }
+  }else{
+    wrap.className='pump-icon-wrap off';
+    sym.innerHTML='&#9632;';sym.className='pump-symbol off-sym';
+    badge.className='panel-badge pb-off';badge.textContent='STANDBY';
+    lbl.textContent='Pump Offline';lbl.style.color='var(--muted)';
+    sub.textContent='Awaiting auto-trigger or manual activation';
+    sysPump.className='sys-dot standby';sysPumpVal.textContent='Standby — Relay OK';
+    if(wasOn)addPumpLog(new Date().toLocaleTimeString()+' Pump Deactivated');
+  }
+}
+function manualPumpToggle(){
+  pumpManOn=document.getElementById('pumpManual').checked;
+  if(pumpManOn)setPump(true,'Manual Override');
+  else setPump(false,'');
+}
+function addPumpLog(msg){
+  const log=document.getElementById('pumpLog');
+  const e=document.createElement('div');
+  e.className='mini-log-entry';
+  e.innerHTML='<span class="mini-log-dot" style="background:var(--teal)"></span><span class="mini-log-time">'+msg+'</span>';
+  if(log.firstChild&&log.firstChild.textContent==='No activations recorded.')log.innerHTML='';
+  log.insertBefore(e,log.firstChild);
+  if(log.children.length>8)log.removeChild(log.lastChild);
+}
+
+// ── EVENT LOG ────────────────────────────────
+function addLog(msg,type){
+  const el=document.getElementById('logEmpty');if(el)el.remove();
+  logCount++;document.getElementById('logCountBadge').textContent=logCount+' EVENTS';
+  const d=new Date();
+  const ts=[d.getHours(),d.getMinutes(),d.getSeconds()].map(n=>String(n).padStart(2,'0')).join(':');
+  const cols={ok:'#22c55e',warn:'#f59e0b',alert:'#ef4444'};
+  const badges={ok:'lb-ok',warn:'lb-warn',alert:'lb-alert'};
+  const labels={ok:'INFO',warn:'WARNING',alert:'ALERT'};
+  const e=document.createElement('div');
+  e.className='log-entry ev-'+type;
+  e.innerHTML='<span class="log-time">'+ts+'</span><span class="log-sev" style="background:'+cols[type]+'"></span><span class="log-msg">'+msg+'</span><span class="log-badge '+badges[type]+'">'+labels[type]+'</span>';
+  const c=document.getElementById('logArea');
+  c.insertBefore(e,c.firstChild);
+  if(c.children.length>25)c.removeChild(c.lastChild);
+}
+function clearLog(){
+  document.getElementById('logArea').innerHTML='<div class="log-empty" id="logEmpty">Log cleared. System is monitoring.</div>';
+  logCount=0;document.getElementById('logCountBadge').textContent='0 EVENTS';
+}
+
+// ── SERVO TRIGGER ────────────────────────────
+function triggerServo(){
+  servoTriggers++;
+  document.getElementById('servoCount').textContent=servoTriggers;
+  document.getElementById('sysServo').className='sys-dot alert';
+  document.getElementById('sysServoVal').textContent='TRIGGERED — Hatch Open';
+  addLog('Servo Escape Hatch Triggered — Juvenile threshold exceeded','alert');
+  setTimeout(()=>{
+    document.getElementById('sysServo').className='sys-dot standby';
+    document.getElementById('sysServoVal').textContent='Standby — Ready';
+  },3000);
+}
+
+// ── GLOBAL STATUS ────────────────────────────
+function updateBanner(states){
+  const bn=document.getElementById('globalBanner');
+  const txt=document.getElementById('bannerTxt');
+  const icon=document.getElementById('bannerIcon');
+  if(states.includes('alert')){
+    bn.className='status-banner sb-alert';
+    icon.textContent='!';
+    txt.textContent='ALERT — Critical condition detected. Buzzer active. Review panels immediately.';
+  }else if(states.includes('warn')){
+    bn.className='status-banner sb-warn';
+    icon.textContent='!';
+    txt.textContent='WARNING — One or more parameters require attention.';
+  }else{
+    bn.className='status-banner sb-ok';
+    icon.textContent='●';
+    txt.textContent='All parameters within safe operating range — System Normal';
+  }
+  document.getElementById('sysBadge').textContent=states.includes('alert')?'ALERT ACTIVE':states.includes('warn')?'WARNING':'ALL SYSTEMS OPERATIONAL';
+  document.getElementById('sysBadge').className='panel-badge '+(states.includes('alert')?'pb-alert':states.includes('warn')?'pb-warn':'pb-ok');
+}
+
+// ── SPARKLINE ────────────────────────────────
+function sparkline(id,data,color){
+  const c=document.getElementById(id);if(!c||data.length<2)return;
+  const dpr=window.devicePixelRatio||1;
+  const W=c.clientWidth||300,H=c.clientHeight||44;
+  c.width=W*dpr;c.height=H*dpr;
+  const ctx=c.getContext('2d');ctx.scale(dpr,dpr);
+  ctx.clearRect(0,0,W,H);
+  const mn=Math.min(...data),mx=Math.max(...data),r=mx-mn||1;
+  const x=i=>(i/(data.length-1))*W;
+  const y=v=>H-((v-mn)/r)*(H-8)-4;
+  const grad=ctx.createLinearGradient(0,0,0,H);
+  grad.addColorStop(0,color+'44');grad.addColorStop(1,color+'00');
+  ctx.beginPath();ctx.moveTo(x(0),H);
+  data.forEach((v,i)=>ctx.lineTo(x(i),y(v)));
+  ctx.lineTo(x(data.length-1),H);ctx.closePath();
+  ctx.fillStyle=grad;ctx.fill();
+  ctx.beginPath();
+  data.forEach((v,i)=>i===0?ctx.moveTo(x(i),y(v)):ctx.lineTo(x(i),y(v)));
+  ctx.strokeStyle=color;ctx.lineWidth=1.5;ctx.stroke();
+  // Latest dot
+  const lx=x(data.length-1),ly=y(data[data.length-1]);
+  ctx.beginPath();ctx.arc(lx,ly,3,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();
+}
+
+// ── CAMERA CANVAS ANIMATION ──────────────────
+let fishBoxes=[];
+function genFishBoxes(n){
+  fishBoxes=[];
+  for(let i=0;i<n;i++){
+    fishBoxes.push({
+      x:10+Math.random()*70,y:10+Math.random()*65,
+      w:8+Math.random()*16,h:4+Math.random()*8,
+      label:Math.random()>.3?'Tilapia':'Juv.',
+      conf:(0.72+Math.random()*.25).toFixed(2),
+      color:Math.random()>.3?'#14b8a6':'#f59e0b'
+    });
+  }
+}
+let camTick=0;
+function drawCam(){
+  const c=document.getElementById('camCanvas');if(!c)return;
+  const dpr=window.devicePixelRatio||1;
+  const W=c.clientWidth,H=c.clientHeight;
+  if(c.width!==W*dpr){c.width=W*dpr;c.height=H*dpr;}
+  const ctx=c.getContext('2d');ctx.scale(dpr,dpr);
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  // Background — simulate murky water
+  ctx.fillStyle='#0c1510';ctx.fillRect(0,0,W,H);
+  // Water caustic shimmer
+  for(let i=0;i<6;i++){
+    const gx=20+Math.sin(camTick*.012+i)*W*.4+i*(W/7);
+    const gy=H/2+Math.cos(camTick*.009+i)*H*.15;
+    const rg=ctx.createRadialGradient(gx,gy,0,gx,gy,30+i*5);
+    rg.addColorStop(0,'rgba(20,184,166,.06)');rg.addColorStop(1,'transparent');
+    ctx.fillStyle=rg;ctx.fillRect(0,0,W,H);
+  }
+  // Draw fish boxes
+  fishBoxes.forEach(fb=>{
+    const bx=fb.x/100*W,by=fb.y/100*H,bw=fb.w/100*W,bh=fb.h/100*H;
+    ctx.strokeStyle=fb.color;ctx.lineWidth=1.5;ctx.strokeRect(bx,by,bw,bh);
+    ctx.fillStyle=fb.color+'cc';ctx.fillRect(bx,by-14,ctx.measureText(fb.label).width+8+30,13);
+    ctx.fillStyle='#000';ctx.font='bold 9px Space Mono,monospace';
+    ctx.fillText(fb.label+' '+fb.conf,bx+4,by-4);
+  });
+  // Scan line
+  const slY=((camTick*1.5)%H);
+  ctx.fillStyle='rgba(34,197,94,.06)';ctx.fillRect(0,slY,W,2);
+  camTick++;
+  if(camTick%40===0)genFishBoxes(sensor.fish);
+  requestAnimationFrame(drawCam);
+}
+
+// ── UPTIME ───────────────────────────────────
+function updateUptime(){
+  const elapsed=Math.floor((Date.now()-startTime)/1000);
+  const h=String(Math.floor(elapsed/3600)).padStart(2,'0');
+  const m=String(Math.floor((elapsed%3600)/60)).padStart(2,'0');
+  const s=String(elapsed%60).padStart(2,'0');
+  document.getElementById('uptime').textContent=h+':'+m+':'+s;
+}
+
+// ── MAIN LOOP ────────────────────────────────
+let prevFishSt='ok',prevTempSt='ok',prevO2Risk='low';
+let loopCount=0;
+function update(){
+  simTick();
+  const tempSt=updateTemp();
+  const o2Risk=updateO2();
+  const fishSt=updateFish();
+  // Pump logic
+  if(!pumpManOn){
+    const autoChk=document.getElementById('pumpAuto').checked;
+    if(autoChk&&(getT()>30||o2Risk!=='low')){
+      setPump(true,getT()>30?'High Temperature':'O2 Risk Detected');
+    }else if(!document.getElementById('pumpManual').checked){
+      if(pumpOn&&getT()<=28&&o2Risk==='low')setPump(false,'');
+    }
+  }
+  // Auto-buzzer on alert
+  const isAlert=tempSt==='alert'||o2Risk==='high'||fishSt==='alert';
+  const isWarn=tempSt==='warn'||o2Risk==='moderate'||fishSt==='warn';
+  if(document.getElementById('autoChk').checked){
+    if(isAlert&&!buzActive)triggerBuzzer();
+    else if(!isAlert&&buzActive&&!isWarn)stopBuzzer();
+  }
+  // Servo trigger on juvenile alert
+  if(fishSt==='alert'&&prevFishSt!=='alert'){triggerServo();}
+  // Log significant state changes
+  if(tempSt==='alert'&&prevTempSt!=='alert'){addLog('Water Temperature Critical — '+getT().toFixed(1)+'°C','alert');}
+  if(tempSt==='warn'&&prevTempSt==='ok'){addLog('Water Temperature Warning — '+getT().toFixed(1)+'°C','warn');}
+  if(o2Risk==='high'&&prevO2Risk!=='high'){addLog('Oxygen Depletion Risk High — DO: '+getDO(getT())+' mg/L','alert');}
+  if(o2Risk==='moderate'&&prevO2Risk==='low'){addLog('Oxygen Risk Moderate — Temperature rising','warn');}
+  if(fishSt==='alert'&&prevFishSt!=='alert'){addLog('Juvenile Catch Threshold Exceeded — Servo escape hatch triggered','alert');}
+  if(loopCount===0){addLog('System initialized — All sensors online','ok');}
+  prevFishSt=fishSt;prevTempSt=tempSt;prevO2Risk=o2Risk;
+  updateBanner([tempSt,o2Risk==='high'?'alert':o2Risk==='moderate'?'warn':'ok',fishSt]);
+  updateUptime();
+  document.getElementById('lastSync').textContent=new Date().toLocaleTimeString();
+  loopCount++;
+}
+
+// ── CLOCK ────────────────────────────────────
+setInterval(()=>document.getElementById('clock').textContent=new Date().toLocaleTimeString(),1000);
+
+// ── INIT ─────────────────────────────────────
+genFishBoxes(sensor.fish);
+drawCam();
+update();
+setInterval(update,2500);
+</script>
+</body>
+</html>
