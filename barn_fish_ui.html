@@ -226,21 +226,64 @@ tr:last-child td{border:none}
         &nbsp;|&nbsp;
         <span id="simScenarioTxt" style="color:var(--amber);">📋 Normal Day</span>
         &nbsp;|&nbsp;
-        <span id="simSpeedTxt" style="color:var(--muted);">⏱ 1× speed</span>
+        <span id="realTimeBadge" style="color:var(--muted);font-size:.65rem;">⏱ Manual</span>
       </div>
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
       <!-- Time speed control -->
-      <div style="display:flex;gap:4px;">
-        <button class="sim-speed-btn act" id="spd1x" onclick="setSimSpeed(1)" style="padding:5px 10px;border-radius:6px;border:1px solid var(--border);background:rgba(34,197,94,0.15);color:var(--green);font-size:.65rem;font-family:var(--mono);cursor:pointer;">1×</button>
-        <button class="sim-speed-btn" id="spd4x" onclick="setSimSpeed(4)" style="padding:5px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:.65rem;font-family:var(--mono);cursor:pointer;">4×</button>
-        <button class="sim-speed-btn" id="spd16x" onclick="setSimSpeed(16)" style="padding:5px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:.65rem;font-family:var(--mono);cursor:pointer;">16×</button>
-      </div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+  <span id="scrubLbl" style="font-size:.65rem;font-family:var(--mono);color:var(--muted);">🕐 Scrub Time:</span>
+  <input type="range" id="timeScrubber" min="0" max="1439" value="360"
+    style="width:180px;accent-color:var(--teal);cursor:pointer;"
+    oninput="scrubTime(this.value)"/>
+  <span id="scrubTimeLbl" style="font-size:.65rem;font-family:var(--mono);color:var(--teal);min-width:40px;">06:00</span>
+  <button onclick="toggleRealTime()" id="btnRealTime"
+    style="padding:5px 10px;border-radius:6px;border:1px solid var(--border);
+    background:var(--surface);color:var(--muted);font-size:.65rem;
+    font-family:var(--mono);cursor:pointer;">
+    <span id="btnRealTimeTxt">📡 Sync Real Time</span>
+</button>
+<!-- ADD after the speed buttons div -->
+<div style="display:flex;gap:4px;margin-left:6px;">
+  <button onclick="rewindTime()" title="Rewind 1 hour"
+    style="padding:5px 10px;border-radius:6px;border:1px solid var(--border);
+    background:var(--surface);color:var(--muted);font-size:.68rem;
+    font-family:var(--mono);cursor:pointer;"><span id="btnRewindTxt">⏮ -1h</span></button>
+  <button onclick="togglePlayPause()" id="btnPlayPause"
+    style="padding:5px 12px;border-radius:6px;border:1px solid rgba(34,197,94,0.4);
+    background:rgba(34,197,94,0.15);color:var(--green);font-size:.68rem;
+    font-family:var(--mono);cursor:pointer;"><span id="btnPlayPauseTxt">⏸ Pause</span></button>
+  <button onclick="forwardTime()" title="Forward 1 hour"
+    style="padding:5px 10px;border-radius:6px;border:1px solid var(--border);
+    background:var(--surface);color:var(--muted);font-size:.68rem;
+    font-family:var(--mono);cursor:pointer;"><span id="btnForwardTxt">+1h ⏭</span></button>
+</div>
+<!-- Speed buttons -->
+<div style="display:flex;gap:4px;margin-left:6px;">
+  <button class="sim-speed-btn" id="spd1x"  onclick="setSimSpeed(1)"
+    style="padding:5px 10px;border-radius:6px;border:1px solid rgba(34,197,94,0.4);
+    background:rgba(34,197,94,0.15);color:var(--green);
+    font-size:.65rem;font-family:var(--mono);cursor:pointer;">1×</button>
+  <button class="sim-speed-btn" id="spd2x"  onclick="setSimSpeed(2)"
+    style="padding:5px 10px;border-radius:6px;border:1px solid var(--border);
+    background:var(--surface);color:var(--muted);
+    font-size:.65rem;font-family:var(--mono);cursor:pointer;">2×</button>
+  <button class="sim-speed-btn" id="spd4x"  onclick="setSimSpeed(4)"
+    style="padding:5px 10px;border-radius:6px;border:1px solid var(--border);
+    background:var(--surface);color:var(--muted);
+    font-size:.65rem;font-family:var(--mono);cursor:pointer;">4×</button>
+  <button class="sim-speed-btn" id="spd16x" onclick="setSimSpeed(16)"
+    style="padding:5px 10px;border-radius:6px;border:1px solid var(--border);
+    background:var(--surface);color:var(--muted);
+    font-size:.65rem;font-family:var(--mono);cursor:pointer;">16×</button>
+</div>
+</div>
       <!-- Scenario presets -->
       <button onclick="setScenario('normal')" id="scnNormal" class="scn-btn act" style="padding:5px 12px;border-radius:6px;border:1px solid rgba(34,197,94,0.4);background:rgba(34,197,94,0.1);color:var(--green);font-size:.68rem;font-family:var(--mono);cursor:pointer;transition:all .2s;">☀️ Normal</button>
       <button onclick="setScenario('heatwave')" id="scnHeatwave" class="scn-btn" style="padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:.68rem;font-family:var(--mono);cursor:pointer;transition:all .2s;">🔥 Heatwave</button>
       <button onclick="setScenario('gasleak')" id="scnGasleak" class="scn-btn" style="padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:.68rem;font-family:var(--mono);cursor:pointer;transition:all .2s;">☠️ Gas Leak</button>
       <button onclick="setScenario('storm')" id="scnStorm" class="scn-btn" style="padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:.68rem;font-family:var(--mono);cursor:pointer;transition:all .2s;">⛈️ Storm</button>
+      
     </div>
   </div>
 
@@ -405,7 +448,8 @@ class BarnTwin {
     if(this.state.temperature>36)s+=40;else if(this.state.temperature>32)s+=20;
     if(this.state.gas>1500)s+=35;else if(this.state.gas>1000)s+=15;
     if(this.state.humidity>80||this.state.humidity<40)s+=15;
-    if(this.state.sound===1)s+=10;
+    if(this.state.sound==='HIGH')s+=20;
+    else if(this.state.sound==='MEDIUM')s+=8;
     this.state.stressScore=Math.min(100,s);
     this.state.stressLevel=s<30?'SAFE':s<60?'WARNING':'CRITICAL';
     return this.state;
@@ -525,8 +569,7 @@ const T={
     sNorm:'Normal',sNear:'Near Limit',sCrit:'CRITICAL',sElev:'Elevated',
     sClean:'Clean Air',sEGas:'Elevated Gas',sTox:'TOXIC LEVEL',
     sSil:'● Silent — OK',sSnd:'⚠ Sound Detected',vSil:'SILENT',vEvt:'EVENT!',
-    sndInfo:'Digital: <span style="color:var(--text)">0 = Silent</span> / <span style="color:var(--red)">1 = Sound Event</span><br>Threshold: <span style="color:var(--text)">≥85 dB indicates stress</span><br>Session alerts: ',
-    spTitle:'Species-Specific Safe Parameter Ranges',
+    sndInfo:'Analog Level: <span style="color:var(--green)">LOW = Silent</span> / <span style="color:var(--amber)">MEDIUM = Noise</span> / <span style="color:var(--red)">HIGH = Stress</span><br>Sensor: <span style="color:var(--text)">KY-038 AO pin — peak sampling</span><br>Session alerts: ',    spTitle:'Species-Specific Safe Parameter Ranges',
     refTitle:'📚 Scientific Basis — Parameter Thresholds & Sources',
     thP:'Parameter',thM:'Current Mode',thS:'Safe Range',thA:'Alert Threshold',thSr:'Standard / Source',
     logTitle:'🚨 Alert Log',logClr:'Clear',logEmpty:'No alerts — system running normally.',
@@ -566,7 +609,21 @@ const T={
     recoSound:'🔊 Check animals — noise detected',
     recoImmediate:'🚨 IMMEDIATE ACTION REQUIRED',
     recoNormal:'✓ All systems normal',
-    twinDigitalAlert:'Digital Twin detected livestock stress'
+    twinDigitalAlert:'Digital Twin detected livestock stress',
+    scrubLbl:       'Scrub Time:',
+  syncRealTime:   '📡 Sync Real Time',
+  badgeManual:    '⏱ Manual',
+  badgeRealTime:  '📡 Real Time',
+  btnPause:       '⏸ Pause',
+  btnPlay:        '▶ Play',
+  btnRewind:      '⏮ -1h',
+  btnForward:     '+1h ⏭',
+  logPaused:      'Simulation paused',
+  logResumed:     'Simulation resumed',
+  logRewound:     'Time rewound -1 hour',
+  logForwarded:   'Time forwarded +1 hour',
+  logScenario:    'Scenario changed: ',
+  logRealSync:    'Time scrubber synced to real clock'
   },
   ta:{
     appTitle:'அக்ரோசென்ஸ்',appSub:'கால்நடை & மீன்வளர்ப்பு IoT கண்காணிப்பு',live:'நேரலை',
@@ -584,8 +641,7 @@ const T={
     sNorm:'இயல்பு',sNear:'வரம்பில்',sCrit:'அவசரம்',sElev:'உயர்வு',
     sClean:'தூய காற்று',sEGas:'வாயு உயர்வு',sTox:'நச்சு நிலை',
     sSil:'● அமைதி — சரி',sSnd:'⚠ ஒலி கண்டறியப்பட்டது',vSil:'அமைதி',vEvt:'ஒலி!',
-    sndInfo:'டிஜிட்டல்: <span style="color:var(--text)">0 = அமைதி</span> / <span style="color:var(--red)">1 = ஒலி நிகழ்வு</span><br>வரம்பு: <span style="color:var(--text)">≥85 dB மன அழுத்தம்</span><br>அமர்வு எச்சரிக்கைகள்: ',
-    spTitle:'இனம்-குறிப்பிட்ட பாதுகாப்பு வரம்புகள்',
+    sndInfo:'அனலாக் நிலை: <span style="color:var(--green)">LOW = அமைதி</span> / <span style="color:var(--amber)">MEDIUM = ஒலி</span> / <span style="color:var(--red)">HIGH = மன அழுத்தம்</span><br>உணரி: <span style="color:var(--text)">KY-038 AO — உச்ச மாதிரி</span><br>அமர்வு எச்சரிக்கைகள்: ',    spTitle:'இனம்-குறிப்பிட்ட பாதுகாப்பு வரம்புகள்',
     refTitle:'📚 அறிவியல் அடிப்படை',
     thP:'அளவுரு',thM:'பயன்முறை',thS:'பாதுகாப்பு வரம்பு',thA:'எச்சரிக்கை வரம்பு',thSr:'ஆதாரம்',
     logTitle:'🚨 எச்சரிக்கை பதிவு',logClr:'அழி',logEmpty:'எச்சரிக்கை இல்லை.',
@@ -625,14 +681,28 @@ const T={
     recoSound:'🔊 விலங்குகளை சரிபார்',
     recoImmediate:'🚨 உடனடி நடவடிக்கை தேவை',
     recoNormal:'✓ அனைத்தும் இயல்பு',
-    twinDigitalAlert:'டிஜிட்டல் இரட்டை மன அழுத்தம் கண்டறிந்தது'
+    twinDigitalAlert:'டிஜிட்டல் இரட்டை மன அழுத்தம் கண்டறிந்தது',
+    scrubLbl:       'நேர குழல்:',
+  syncRealTime:   '📡 நேரலை நேரம்',
+  badgeManual:    '⏱ கைமுறை',
+  badgeRealTime:  '📡 நேரலை',
+  btnPause:       '⏸ இடைநிறுத்து',
+  btnPlay:        '▶ இயக்கு',
+  btnRewind:      '⏮ -1மணி',
+  btnForward:     '+1மணி ⏭',
+  logPaused:      'உருவகம் இடைநிறுத்தப்பட்டது',
+  logResumed:     'உருவகம் தொடர்கிறது',
+  logRewound:     'நேரம் 1 மணி பின்னோக்கி',
+  logForwarded:   'நேரம் 1 மணி முன்னோக்கி',
+  logScenario:    'காட்சி மாற்றம்: ',
+  logRealSync:    'நேர குழல் நேரலை கடிகாரத்துடன் இணைக்கப்பட்டது'
   }
 };
 
 // ══════════════════════════════════════════════════════════════════
 // MODE DATA
 // ══════════════════════════════════════════════════════════════════
-const MODES={livestock:{temp:{min:0,max:45,safeMin:10,safeMax:32},hum:{min:0,max:100,safeMin:50,safeMax:80},gas:{min:0,max:4095,safeMin:0,safeMax:800},sp:{en:[{n:'Cattle',t:'Livestock',r:[['Temp THI comfort','< 72 THI (≈10–26°C)'],['Humidity','50–80%'],['NH₃ (Ammonia)','< 25 ppm'],['CO₂','< 3000 ppm'],['Noise stress','< 85 dB']]},{n:'Goat / Sheep',t:'Livestock',r:[['Temperature','18–30°C'],['Humidity','55–75%'],['NH₃','< 20 ppm'],['Noise stress','< 80 dB']]},{n:'Swine / Pig',t:'Livestock',r:[['Temperature','16–26°C'],['Humidity','50–70%'],['NH₃','< 10 ppm (EU)'],['CO₂','< 3000 ppm']]}],ta:[{n:'மாடு',t:'கால்நடை',r:[['வெப்பநிலை THI','< 72 THI'],['ஈரப்பதம்','50–80%'],['NH₃','< 25 ppm'],['CO₂','< 3000 ppm'],['ஒலி','< 85 dB']]},{n:'ஆடு',t:'கால்நடை',r:[['வெப்பநிலை','18–30°C'],['ஈரப்பதம்','55–75%'],['NH₃','< 20 ppm'],['ஒலி','< 80 dB']]},{n:'பன்றி',t:'கால்நடை',r:[['வெப்பநிலை','16–26°C'],['ஈரப்பதம்','50–70%'],['NH₃','< 10 ppm'],['CO₂','< 3000 ppm']]}]},ref:{en:[['Temperature','Cattle / Goat','10–32°C','> 35°C','FAO Livestock & Climate'],['Humidity','Cattle Barn','50–80% RH','> 85% RH','MWPS-32'],['Gas (MQ-135)','Barn NH₃/CO₂','0–800 ADC','> 1500 ADC','OSHA PEL'],['Sound','Stress','0 (silent)','1 (> 85 dB)','OIE Art. 7.1']],ta:[['வெப்பநிலை','மாடு','10–32°C','> 35°C','FAO'],['ஈரப்பதம்','தொழுவம்','50–80% RH','> 85% RH','MWPS-32'],['வாயு','NH₃/CO₂','0–800 ADC','> 1500 ADC','OSHA'],['ஒலி','மன அழுத்தம்','0','1 (> 85 dB)','OIE']]}},fisheries:{temp:{min:0,max:45,safeMin:22,safeMax:30},hum:{min:0,max:100,safeMin:60,safeMax:95},gas:{min:0,max:4095,safeMin:0,safeMax:400},sp:{en:[{n:'Tilapia',t:'Freshwater Fish',r:[['Water Temp','25–30°C'],['DO','> 5 mg/L'],['NH₃','< 0.02 mg/L'],['pH','6.5–8.5']]},{n:'Catfish',t:'Freshwater Fish',r:[['Water Temp','26–30°C'],['DO','> 4 mg/L'],['NH₃','< 0.05 mg/L'],['pH','6.5–8.0']]},{n:'Shrimp',t:'Marine',r:[['Water Temp','23–30°C'],['Salinity','15–25 ppt'],['DO','> 5 mg/L'],['NH₃','< 0.1 mg/L']]}],ta:[{n:'திலாப்பியா',t:'நன்னீர் மீன்',r:[['நீர் வெப்பநிலை','25–30°C'],['DO','> 5 mg/L'],['NH₃','< 0.02 mg/L'],['pH','6.5–8.5']]},{n:'கெளுத்தி',t:'நன்னீர் மீன்',r:[['நீர் வெப்பநிலை','26–30°C'],['DO','> 4 mg/L'],['NH₃','< 0.05 mg/L'],['pH','6.5–8.0']]},{n:'இறால்',t:'கடல்',r:[['நீர் வெப்பநிலை','23–30°C'],['உப்புத்தன்மை','15–25 ppt'],['DO','> 5 mg/L'],['NH₃','< 0.1 mg/L']]}]},ref:{en:[['Temperature','Fish hatchery','22–32°C','> 38°C','FAO Aquaculture'],['Humidity','Indoor aquaculture','60–95% RH','< 40% or > 95%','FAO Tech 408'],['Gas (MQ-135)','H₂S/NH₃ pond','0–400 ADC','> 800 ADC','WHO Aquatic'],['Sound','Stress min','0 (silent)','1 (shock)','FAO Art. 9.1.3']],ta:[['வெப்பநிலை','மீன் குஞ்சு','22–32°C','> 38°C','FAO'],['ஈரப்பதம்','உள்புற','60–95% RH','< 40% or > 95%','FAO'],['வாயு','H₂S/NH₃','0–400 ADC','> 800 ADC','WHO'],['ஒலி','குறைப்பு','0','1 (அதிர்வு)','FAO']]}}};
+const MODES={livestock:{temp:{min:0,max:45,safeMin:10,safeMax:32},hum:{min:0,max:100,safeMin:50,safeMax:80},gas:{min:0,max:4095,safeMin:0,safeMax:800},sp:{en:[{n:'Cattle',t:'Livestock',r:[['Temp THI comfort','< 72 THI (≈10–26°C)'],['Humidity','50–80%'],['NH₃ (Ammonia)','< 25 ppm'],['CO₂','< 3000 ppm'],['Noise stress','< 85 dB']]},{n:'Goat / Sheep',t:'Livestock',r:[['Temperature','18–30°C'],['Humidity','55–75%'],['NH₃','< 20 ppm'],['Noise stress','< 80 dB']]},{n:'Swine / Pig',t:'Livestock',r:[['Temperature','16–26°C'],['Humidity','50–70%'],['NH₃','< 10 ppm (EU)'],['CO₂','< 3000 ppm']]}],ta:[{n:'மாடு',t:'கால்நடை',r:[['வெப்பநிலை THI','< 72 THI'],['ஈரப்பதம்','50–80%'],['NH₃','< 25 ppm'],['CO₂','< 3000 ppm'],['ஒலி','< 85 dB']]},{n:'ஆடு',t:'கால்நடை',r:[['வெப்பநிலை','18–30°C'],['ஈரப்பதம்','55–75%'],['NH₃','< 20 ppm'],['ஒலி','< 80 dB']]},{n:'பன்றி',t:'கால்நடை',r:[['வெப்பநிலை','16–26°C'],['ஈரப்பதம்','50–70%'],['NH₃','< 10 ppm'],['CO₂','< 3000 ppm']]}]},ref:{en:[['Temperature','Cattle / Goat','10–32°C','> 35°C','FAO Livestock & Climate'],['Humidity','Cattle Barn','50–80% RH','> 85% RH','MWPS-32'],['Gas (MQ-135)','Barn NH₃/CO₂','0–800 ADC','> 1500 ADC','OSHA PEL'],['Sound','KY-038 Analog','LOW (silent)','HIGH (peak > 10)','OIE Art. 7.1']],ta:[['வெப்பநிலை','மாடு','10–32°C','> 35°C','FAO'],['ஈரப்பதம்','தொழுவம்','50–80% RH','> 85% RH','MWPS-32'],['வாயு','NH₃/CO₂','0–800 ADC','> 1500 ADC','OSHA'],['ஒலி','KY-038 அனலாக்','LOW (அமைதி)','HIGH (உச்சம் > 10)','OIE']]}},fisheries:{temp:{min:0,max:45,safeMin:22,safeMax:30},hum:{min:0,max:100,safeMin:60,safeMax:95},gas:{min:0,max:4095,safeMin:0,safeMax:400},sp:{en:[{n:'Tilapia',t:'Freshwater Fish',r:[['Water Temp','25–30°C'],['DO','> 5 mg/L'],['NH₃','< 0.02 mg/L'],['pH','6.5–8.5']]},{n:'Catfish',t:'Freshwater Fish',r:[['Water Temp','26–30°C'],['DO','> 4 mg/L'],['NH₃','< 0.05 mg/L'],['pH','6.5–8.0']]},{n:'Shrimp',t:'Marine',r:[['Water Temp','23–30°C'],['Salinity','15–25 ppt'],['DO','> 5 mg/L'],['NH₃','< 0.1 mg/L']]}],ta:[{n:'திலாப்பியா',t:'நன்னீர் மீன்',r:[['நீர் வெப்பநிலை','25–30°C'],['DO','> 5 mg/L'],['NH₃','< 0.02 mg/L'],['pH','6.5–8.5']]},{n:'கெளுத்தி',t:'நன்னீர் மீன்',r:[['நீர் வெப்பநிலை','26–30°C'],['DO','> 4 mg/L'],['NH₃','< 0.05 mg/L'],['pH','6.5–8.0']]},{n:'இறால்',t:'கடல்',r:[['நீர் வெப்பநிலை','23–30°C'],['உப்புத்தன்மை','15–25 ppt'],['DO','> 5 mg/L'],['NH₃','< 0.1 mg/L']]}]},ref:{en:[['Temperature','Fish hatchery','22–32°C','> 38°C','FAO Aquaculture'],['Humidity','Indoor aquaculture','60–95% RH','< 40% or > 95%','FAO Tech 408'],['Gas (MQ-135)','H₂S/NH₃ pond','0–400 ADC','> 800 ADC','WHO Aquatic'],['Sound','KY-038 Analog','LOW (silent)','HIGH (peak > 10)','FAO Art. 9.1.3']],ta:[['வெப்பநிலை','மீன் குஞ்சு','22–32°C','> 38°C','FAO'],['ஈரப்பதம்','உள்புற','60–95% RH','< 40% or > 95%','FAO'],['வாயு','H₂S/NH₃','0–400 ADC','> 800 ADC','WHO'],['ஒலி','KY-038 அனலாக்','LOW (அமைதி)','HIGH (உச்சம் > 10)','FAO']['ஒலி','குறைப்பு','0','1 (அதிர்வு)','FAO']]}}};
 
 // ══════════════════════════════════════════════════════════════════
 // SIMULATION STATE
@@ -759,23 +829,12 @@ function setScenario(name) {
   }
 
   document.getElementById('simScenarioTxt').textContent = '📋 '+scn.label;
-  addLog('Scenario changed: '+scn.label, name==='normal'?'ok':'warn');
+  addLog(T[lang].logScenario + scn.label, name==='normal'?'ok':'warn');
 }
 
 function hexToRgb(hex){
   const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
   return `${r},${g},${b}`;
-}
-
-function setSimSpeed(s){
-  simState.simSpeed = s;
-  document.querySelectorAll('.sim-speed-btn').forEach(b=>{
-    b.style.background='var(--surface)';b.style.borderColor='var(--border)';b.style.color='var(--muted)';
-  });
-  const ids={1:'spd1x',4:'spd4x',16:'spd16x'};
-  const btn=document.getElementById(ids[s]);
-  if(btn){btn.style.background='rgba(34,197,94,0.15)';btn.style.borderColor='var(--green)';btn.style.color='var(--green)';}
-  document.getElementById('simSpeedTxt').textContent='⏱ '+s+'× speed';
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -790,6 +849,43 @@ function getTimeOfDayTemp(minutes) {
   return base;
 }
 
+function setSimSpeed(s){
+  // Exit real time mode when speed is changed
+  if(realTimeMode){
+    realTimeMode = false;
+    clearInterval(realTimeInterval);
+    document.getElementById('btnRealTime').style.background = 'var(--surface)';
+    document.getElementById('btnRealTime').style.color = 'var(--muted)';
+    document.getElementById('btnRealTime').style.borderColor = 'var(--border)';
+    document.getElementById('realTimeBadge').textContent = '⏱ Manual';
+    document.getElementById('realTimeBadge').style.color = 'var(--muted)';
+    document.getElementById('realTimeBadge').textContent = T[lang].badgeManual+' '+s+'×';
+  }
+
+  simState.simSpeed = s;
+
+  // Update all speed buttons
+  ['spd1x','spd2x','spd4x','spd16x'].forEach(id => {
+    const btn = document.getElementById(id);
+    if(!btn) return;
+    btn.style.background  = 'var(--surface)';
+    btn.style.borderColor = 'var(--border)';
+    btn.style.color       = 'var(--muted)';
+  });
+
+  // Highlight active button
+  const ids = {1:'spd1x', 2:'spd2x', 4:'spd4x', 16:'spd16x'};
+  const active = document.getElementById(ids[s]);
+  if(active){
+    active.style.background  = 'rgba(34,197,94,0.15)';
+    active.style.borderColor = 'var(--green)';
+    active.style.color       = 'var(--green)';
+  }
+
+  document.getElementById('realTimeBadge').textContent = '⏱ '+s+'× speed';
+  document.getElementById('realTimeBadge').style.color = 'var(--muted)';
+}
+
 function getTimeOfDayLabel(minutes) {
   const h = Math.floor(minutes/60) % 24;
   if(h >= 5  && h < 9 ) return {phase:'🌅 Morning',  color:'#f59e0b'};
@@ -801,6 +897,8 @@ function getTimeOfDayLabel(minutes) {
 }
 
 function physicsSimTick() {
+
+  if(simPaused) return;
   // Advance sim time
   simState.simMinutes += simState.simSpeed;
   const mins = simState.simMinutes % (24*60);
@@ -1278,6 +1376,14 @@ function applyLang(){
   updateFusionGauges(simState.temp,simState.gas,simState.hum,twin.state.stressScore||0);
   updateMLPrediction(hist.temp);
   updateRecommendations({temperature:simState.temp,humidity:simState.hum,gas:simState.gas,sound:simState.sound,stressLevel:twin.state.stressLevel||'SAFE'});
+  const s2=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+s2('scrubLbl',         '🕐 '+t.scrubLbl);
+s2('btnRealTimeTxt',   t.syncRealTime);
+s2('btnRewindTxt',     t.btnRewind);
+s2('btnForwardTxt',    t.btnForward);
+s2('btnPlayPauseTxt',  simPaused ? t.btnPlay : t.btnPause);
+s2('realTimeBadge',    realTimeMode ? t.badgeRealTime : t.badgeManual);
+
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -1427,6 +1533,37 @@ function updateRecommendations(state){
     :`<div style="color:var(--green)">${t.recoNormal}</div>`;
 }
 
+
+// ══════════════════════════════════════════════════════════════════
+// REAL SENSOR FETCH — reads from Python bridge (USB serial)
+// Falls back to physics simulation if bridge not running
+// ══════════════════════════════════════════════════════════════════
+let usingRealSensors = false;
+
+async function fetchSensors() {
+  try {
+    const res = await fetch('http://localhost:5000/sensors', {signal: AbortSignal.timeout(3000)});
+    const data = await res.json();
+    simState.temp  = data.temp;
+    simState.hum   = data.hum;
+    simState.gas   = data.gas;
+    simState.sound = data.sound;
+    if(!usingRealSensors){
+      usingRealSensors = true;
+      addLog('Real sensors connected via USB serial', 'ok');
+      document.getElementById('liveTxt').textContent = '🔌 Real Sensors';
+    }
+  } catch(e) {
+    // Bridge not running — use physics simulation
+    physicsSimTick();
+    if(usingRealSensors){
+      usingRealSensors = false;
+      addLog('Serial bridge disconnected — using simulation', 'warn');
+      document.getElementById('liveTxt').textContent = T[lang].live;
+    }
+  }
+}
+
 // ══════════════════════════════════════════════════════════════════
 // CORE UPDATE LOOP
 // ══════════════════════════════════════════════════════════════════
@@ -1475,9 +1612,9 @@ function renderLoop(){
   rafHandle=requestAnimationFrame(renderLoop);
 }
 
-function update(){
-  // Run physics simulation tick
-  physicsSimTick();
+async function update(){
+  // Try real sensors first, fall back to simulation
+  await fetchSensors();
 
   const m=MODES[mode],t=T[lang];
   // Push sim state into sensor (what the dashboard reads)
@@ -1506,22 +1643,49 @@ function update(){
   setNdl('hum',sensor.hum,m.hum.min,m.hum.max,m.hum.safeMin,m.hum.safeMax);sparkline('hum',hist.hum,'#3b82f6');
   const gS=getSt(sensor.gas,m.gas.safeMin,m.gas.safeMax);
   setCard('gas',gS,Math.round(sensor.gas)+' <span class="card-unit">ADC</span>',gS==='ok'?t.sClean:gS==='warn'?t.sEGas:t.sTox);
-  setNdl('gas',sensor.gas,m.gas.min,m.gas.max,m.gas.safeMin,m.gas.safeMax);sparkline('gas',hist.gas,'#f59e0b');
-  const ssT=sensor.sound===0?'ok':'warn';
-  if(sensor.sound===1){sndCnt++;const sc=document.getElementById('sndCnt');if(sc)sc.textContent=sndCnt;}
-  document.getElementById('val-snd').textContent=sensor.sound===0?t.vSil:t.vEvt;
-  document.getElementById('val-snd').style.color=sensor.sound===0?'var(--text)':'#ef4444';
+  setNdl('gas',sensor.gas,m.gas.min,m.gas.max,m.gas.safeMin,m.gas.safeMax);
+  sparkline('gas',hist.gas,'#f59e0b');
+  // ── Sound (HIGH / MEDIUM / LOW) ──────────────────────────
+  const soundColors = {LOW:'ok', MEDIUM:'warn', HIGH:'alert'};
+  const ssT = soundColors[sensor.sound] || 'ok';
+  if(sensor.sound==='HIGH' || sensor.sound==='MEDIUM'){
+    sndCnt++;
+    const sc=document.getElementById('sndCnt');
+    if(sc)sc.textContent=sndCnt;
+  }
+  document.getElementById('val-snd').textContent = sensor.sound || 'LOW';
+  document.getElementById('val-snd').style.color =
+    sensor.sound==='HIGH'   ? '#ef4444' :
+    sensor.sound==='MEDIUM' ? '#f59e0b' : 'var(--text)';
   document.getElementById('st-snd').className='card-st st-'+ssT;
-  document.getElementById('st-snd').textContent=sensor.sound===0?t.sSil:t.sSnd;
-  const sts=[tS,hS,gS];let alts=[];
+  document.getElementById('st-snd').textContent=
+    sensor.sound==='HIGH'   ? '🚨 High Noise — Stress!' :
+    sensor.sound==='MEDIUM' ? '⚠ Medium Noise'          : '● Silent — OK';
+  // ─────────────────────────────────────────────────────────
+  const sts=[tS,hS,gS]; let alts=[];
   if(tS!=='ok')alts.push(t.aTemp[tS==='alert'?1:0]);
   if(hS!=='ok')alts.push(t.aHum[hS==='alert'?1:0]);
   if(gS!=='ok')alts.push(t.aGas[gS==='alert'?1:0]);
-  if(sensor.sound===1)alts.push(t.aSnd);
+  if(sensor.sound==='HIGH')alts.push(t.aSnd);   // ← updated
+
   const bn=document.getElementById('banner');
-  if(sts.includes('alert')){bn.className='status-banner sb-alert';document.getElementById('bannerTxt').textContent=t.stAlert+alts.join(' | ');alts.forEach(a=>addLog(a,'alert'));if(document.getElementById('autoChk').checked&&!buzActive)triggerBuzzer();}
-  else if(sts.includes('warn')||sensor.sound===1){bn.className='status-banner sb-warn';document.getElementById('bannerTxt').textContent=t.stWarn+alts.join(' | ');if(Math.random()>.7)alts.forEach(a=>addLog(a,'warn'));if(document.getElementById('autoChk').checked&&!buzActive&&sts.includes('warn'))triggerBuzzer();}
-  else{bn.className='status-banner sb-ok';document.getElementById('bannerTxt').textContent=t.allOk;if(buzActive)stopBuzzer();}
+  if(sts.includes('alert')){
+    bn.className='status-banner sb-alert';
+    document.getElementById('bannerTxt').textContent=t.stAlert+alts.join(' | ');
+    alts.forEach(a=>addLog(a,'alert'));
+    if(document.getElementById('autoChk').checked&&!buzActive)triggerBuzzer();
+  }
+  else if(sts.includes('warn')||sensor.sound==='HIGH'||sensor.sound==='MEDIUM'){
+    bn.className='status-banner sb-warn';
+    document.getElementById('bannerTxt').textContent=t.stWarn+alts.join(' | ');
+    if(Math.random()>.7)alts.forEach(a=>addLog(a,'warn'));
+    if(document.getElementById('autoChk').checked&&!buzActive&&sts.includes('warn'))triggerBuzzer();
+  }
+  else{
+    bn.className='status-banner sb-ok';
+    document.getElementById('bannerTxt').textContent=t.allOk;
+    if(buzActive)stopBuzzer();
+  }
 }
 
 function setMode(m){
@@ -1535,6 +1699,141 @@ function setMode(m){
 function renderSp(){const list=MODES[mode].sp[lang];document.getElementById('spPanel').innerHTML=list.map(s=>'<div class="sp-card"><div class="sp-name">'+s.n+'</div><div class="sp-type">'+s.t+'</div>'+s.r.map(r=>'<div class="sp-row"><span class="sp-param">'+r[0]+'</span><span class="sp-range">'+r[1]+'</span></div>').join('')+'</div>').join('');}
 function renderRef(){const rows=MODES[mode].ref[lang];document.getElementById('refTbody').innerHTML=rows.map(r=>'<tr><td>'+r[0]+'</td><td>'+r[1]+'</td><td class="td-ok">'+r[2]+'</td><td class="td-red">'+r[3]+'</td><td class="td-src">'+r[4]+'</td></tr>').join('');}
 function clearLog(){const t=T[lang];document.getElementById('logCont').innerHTML='<div class="log-empty" id="logEmpty">'+t.logEmpty+'</div>';sndCnt=0;const sc=document.getElementById('sndCnt');if(sc)sc.textContent='0';}
+
+// ══════════════════════════════════════════════════════════════════
+// TIME SCRUBBER + REAL TIME SYNC
+// ══════════════════════════════════════════════════════════════════
+let realTimeMode = false;
+let realTimeInterval = null;
+
+function scrubTime(val) {
+  // If user drags scrubber, exit real time mode
+  if(realTimeMode) {
+    realTimeMode = false;
+    clearInterval(realTimeInterval);
+    document.getElementById('btnRealTime').style.background = 'var(--surface)';
+    document.getElementById('btnRealTime').style.color = 'var(--muted)';
+    document.getElementById('btnRealTime').style.borderColor = 'var(--border)';
+    document.getElementById('realTimeBadge').textContent = '⏱ Manual';
+    document.getElementById('realTimeBadge').style.color = 'var(--muted)';
+  }
+
+  simState.simMinutes = parseInt(val);
+  const hh = String(Math.floor(val/60)%24).padStart(2,'0');
+  const mm = String(val%60).padStart(2,'0');
+
+  // Update scrubber label
+  document.getElementById('scrubTimeLbl').textContent = hh+':'+mm;
+
+  // Update twin time display
+  document.getElementById('simTimeTxt').textContent = hh+':'+mm;
+
+  // Update phase
+  const tod = getTimeOfDayLabel(parseInt(val));
+  const phaseEl = document.getElementById('simPhaseTxt');
+  phaseEl.textContent = tod.phase;
+  phaseEl.style.color = tod.color;
+
+  // Update TOD effect immediately
+  const targetTemp = getTimeOfDayTemp(parseInt(val));
+  document.getElementById('todEffect').textContent =
+    'TOD base: '+targetTemp.toFixed(1)+'°C at '+hh+':'+mm;
+}
+
+function toggleRealTime() {
+  realTimeMode = !realTimeMode;
+  const btn   = document.getElementById('btnRealTime');
+  const btxt  = document.getElementById('btnRealTimeTxt');
+  const badge = document.getElementById('realTimeBadge');
+  const t     = T[lang];
+
+  if(realTimeMode) {
+    if(btxt) btxt.textContent = t.badgeRealTime;
+    btn.style.background  = 'rgba(20,184,166,0.15)';
+    btn.style.color       = 'var(--teal)';
+    btn.style.borderColor = 'var(--teal)';
+    badge.textContent     = t.badgeRealTime;
+    badge.style.color     = 'var(--teal)';
+    syncRealTime();
+    realTimeInterval = setInterval(syncRealTime, 1000);
+    addLog(t.logRealSync, 'ok');
+  } else {
+    if(btxt) btxt.textContent = t.syncRealTime;
+    btn.style.background  = 'var(--surface)';
+    btn.style.color       = 'var(--muted)';
+    btn.style.borderColor = 'var(--border)';
+    badge.textContent     = t.badgeManual;
+    badge.style.color     = 'var(--muted)';
+    clearInterval(realTimeInterval);
+  }
+}
+
+function syncRealTime() {
+  const now = new Date();
+  const totalMins = now.getHours() * 60 + now.getMinutes();
+
+  // Update scrubber position
+  const scrubber = document.getElementById('timeScrubber');
+  if(scrubber) scrubber.value = totalMins;
+
+  // Update label with real seconds too
+  const hh = String(now.getHours()).padStart(2,'0');
+  const mm = String(now.getMinutes()).padStart(2,'0');
+  const ss = String(now.getSeconds()).padStart(2,'0');
+  document.getElementById('scrubTimeLbl').textContent = hh+':'+mm+':'+ss;
+  document.getElementById('simTimeTxt').textContent = hh+':'+mm;
+
+  simState.simMinutes = totalMins;
+
+  // Update phase
+  const tod = getTimeOfDayLabel(totalMins);
+  const phaseEl = document.getElementById('simPhaseTxt');
+  phaseEl.textContent = tod.phase;
+  phaseEl.style.color = tod.color;
+}
+
+// ══════════════════════════════════════════════════════════════════
+// PLAY / PAUSE / REWIND / FORWARD
+// ══════════════════════════════════════════════════════════════════
+let simPaused = false;
+
+function togglePlayPause(){
+  simPaused = !simPaused;
+  const btn  = document.getElementById('btnPlayPause');
+  const btxt = document.getElementById('btnPlayPauseTxt');
+  const t    = T[lang];
+  if(simPaused){
+    if(btxt) btxt.textContent = t.btnPlay;
+    btn.style.background  = 'rgba(245,158,11,0.15)';
+    btn.style.borderColor = 'var(--amber)';
+    btn.style.color       = 'var(--amber)';
+    addLog(t.logPaused, 'warn');
+  } else {
+    if(btxt) btxt.textContent = t.btnPause;
+    btn.style.background  = 'rgba(34,197,94,0.15)';
+    btn.style.borderColor = 'var(--green)';
+    btn.style.color       = 'var(--green)';
+    addLog(t.logResumed, 'ok');
+  }
+}
+function rewindTime(){
+  if(realTimeMode) toggleRealTime();
+  simState.simMinutes = Math.max(0, simState.simMinutes - 60);
+  const scrubber = document.getElementById('timeScrubber');
+  if(scrubber) scrubber.value = simState.simMinutes % (24*60);
+  scrubTime(simState.simMinutes % (24*60));
+  addLog(T[lang].logRewound, 'ok');
+}
+
+function forwardTime(){
+  if(realTimeMode) toggleRealTime();
+  simState.simMinutes = simState.simMinutes + 60;
+  const scrubber = document.getElementById('timeScrubber');
+  if(scrubber) scrubber.value = simState.simMinutes % (24*60);
+  scrubTime(simState.simMinutes % (24*60));
+  addLog(T[lang].logForwarded, 'ok');
+}
+
 
 // ══════════════════════════════════════════════════════════════════
 // INIT
