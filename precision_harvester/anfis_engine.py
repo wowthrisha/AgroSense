@@ -465,7 +465,8 @@ while True:
         except:
             pass
 
-        if not temp:
+        # Ensure we have valid sensor data, otherwise use simulation
+        if temp is None or ph is None or o2 is None:
             sim_temp += np.random.normal(0, 0.1)
             sim_ph   += np.random.normal(0, 0.02)
             sim_o2   += np.random.normal(0, 0.05)
@@ -478,8 +479,8 @@ while True:
         try:
             r2         = requests.get("http://127.0.0.1:5050/data", timeout=0.3)
             d2         = r2.json()
-            fish_count = d2.get("total_count", 0)
-            juv_pct    = d2.get("juvenile_percentage", 0)
+            fish_count = d2.get("total_count", 0) or 0
+            juv_pct    = d2.get("juvenile_percentage", 0) or 0
         except:
             pass
 
